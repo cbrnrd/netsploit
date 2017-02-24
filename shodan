@@ -65,6 +65,12 @@ def search_host(hostname, outfile=False, filename=''):
     print_good("Organization: %s" % host.get('org', 'n/a'))
     print_good("Operating System: %s" % host.get('os', 'n/a'))
 
+    for item in host['data']:
+        print """
+                Port: %s
+                Banner: %s
+        """ % (item['port'], item['data'])
+
 def facet_search(query, num):
     FACETS = [
         'org',
