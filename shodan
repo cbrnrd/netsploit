@@ -52,14 +52,27 @@ def search(content, outfile=False, filename=''):
     if outfile:
         with open(filename, 'w') as outf:
             for result in results['matches']:
-                outf.write(result['ip_str'])
+                outf.write(result['ip_str'] + "\n")
     else:
         for retult in results['matches']:
             print_good(result['ip_str'])
 
 def search_host(hostname, outfile=False, filename=''):
+    print_msg("Searching shodan...")
+    if outfile:
+        print_msg("Outputting results to: %s" % filename)
+    else:
+        print_mssg("Outputting results to STDOUT")
     host = api.host(hostname)
-
+    if outfile:
+        with open(filename, 'w') as outf:
+            outf.write("IP: %s\n" % host['ip_str'])
+            outf.write("Organization: %s\n" % host.get('org', 'n/a'))
+            outf.write("Operating System: %s\n" % host.get('os', 'n/a'))
+            for item in host['data']:
+                outf.write("Port: %s\n" % item['port'])
+                outf.write("Banner: %s\n" % item['data'])
+            
     # print general information about host
     print_good("IP: %s" % host['ip_str'])
     print_good("Organization: %s" % host.get('org', 'n/a'))
