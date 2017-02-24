@@ -1,0 +1,151 @@
+#!/usr/bin/python
+# coding=utf-8
+import sys
+try:
+    import shodan
+except ImportError:
+    print "You have not installed the shodan module."
+    print "Please install it with the following command: `pip install shodan`"
+
+KEY = ""
+try:
+    api = shodan.Shodan(KEY)
+except shodan.APIError, e:
+    print_err("Error: {}".format(e))
+class bcolors:
+    HEADER   =  '\033[95m'
+    OKBLUE   =  '\033[34m'
+    OKGREEN  =  '\033[32m'
+    WARNING  =  '\033[93m'
+    FAIL     =  '\033[31m'
+    ENDC     =  '\033[0m'
+    BOLD     =  '\033[1m'
+    TITLE    =  '\033[96m'
+
+# predefine commands
+cmds = ['search', 'exit', 'search_host', 'facets', 'help']
+
+# Some basic UI print functions, make it look a bit nicer
+def print_msg(msg):
+    print bcolors.OKBLUE + bcolors.BOLD + "[*]" + bcolors.ENDC + msg
+
+def print_err(msg):
+    print bcolors.FAIL + bcolors.BOLD + "[!]" + bcolors.ENDC + msg
+
+def print_good(msg):
+    print bcolors.OKGREEN + bcolors.BOLD + "[+]" + bcolors.ENDC + msg
+
+def banner():
+    return bcolors.HEADER + """        __             __                __       
+ .-----|  |--.-----.--|  .---.-.-----.  |__.-----.
+ |__ --|     |  _  |  _  |  _  |     |__|  |  _  |
+ |_____|__|__|_____|_____|___._|__|__|__|__|_____|
+ {}By thecarterb <0xCB[at]protonmail.com>""".format(bolors.ENDC) 
+
+def search(content, outfile=False, filename=''):
+    print_msg("Searching for {}".format(content))
+    if outfile:
+        print_msg("Outputting to \'filename\'")
+    else:
+        print_msg("Printing to STDOUT")
+    results = api.search(content)  # Search shodan 
+    if outfile:
+        with open(filename, 'w') as outf:
+            for result in results['matches']:
+                outf.write(result['ip_str'])
+    else:
+        for retult in results['matches']:
+            print_good(result['ip_str'])
+
+def search_host(hostname, outfile=False, filename=''):
+    host = api.host(hostname)
+
+    # print general information about host
+    print_good("IP: %s" % host['ip_str'])
+    print_good("Organization: %s" % host.get('org', 'n/a'))
+    print_good("Operating System: %s" % host.get('os', 'n/a'))
+
+def facet_search(query, num):
+    FACETS = [
+        'org',
+        'domain',
+        'port',
+        'asn',
+
+        ('country', num),
+]
+
+    FACET_TITLES = {
+        'org': 'Top 10 Organizations',
+        'domain': 'Top 10 Domains',
+        'port': 'Top 10 Ports',
+        'asn': 'Top 10 Autonomous Systems',
+        'country': 'Top 5 Countries',
+    }
+
+    result = api.count(query, facets=FACETS)
+
+    print 'Shodan Summary Information'
+    print 'Query: %s' % query
+    print 'Total Results: %s\n' % result['total']
+
+    # Print the summary info from the facets
+    for facet in result['facets']:
+        print FACET_TITLES[facet]
+
+        for term in result['facets'][facet]:
+            print '%s: %s' % (term['value'], term['count'])
+
+        # Print an empty line between summary info
+        print ''
+
+def main():
+    while True:
+        try:
+            user_in = raw_input("shodan > ")
+            
+            if user_in == cmds[0]:  # search
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print "\'search\' usage: search <query> [output_file]"
+                elif len(inarr) == 2:
+                    search(inarr[1])
+                elif len(inarr) == 3:
+                    search(inarr[1], True, inarr[2])
+
+            elif user_in == cmds[1]:  # exit
+                print_err("Exiting.")
+                sys.exit(0)
+
+            elif user_in == cmds[2]:  # search_host
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print_msg("\'search_host\' usage: search_host <hostname> [outfilename]")
+                elif len(inarr) == 2:
+                    search_host(inarr[1])
+                elif len(inarr) == 3:
+                    search_host(inarr[1], True, inarr[2])
+
+            elif user_in == cmds[3]:
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print_msg("\'facets\' usage: facets \"<search query>\" <number of countries>")
+                elif len(inarr) == 2:
+                    print_msg("Missing country number")
+                elif len(inarr) == 3:
+                    facet_search(inarr[1:], inarr[len(inarr) - 1])  # TODO test this
+        except KeyboardInterrupt:
+            print_msg("Use \"exit\" to exit the program")
+            pass
+        except Exception as e:
+            print_err("Error: %s" % e)
+            pass
+
+
+if __name__ == "__main__":
+    main()
+                                                  
+                                                  
+                                                  
+                                                  
+    
