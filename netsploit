@@ -420,7 +420,7 @@ Misc commands:
             elif cmds[9] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
-                    print "\'portscan\' usage: portscan <ip> <min port> <max port>"
+                    print_msg("\'portscan\' usage: portscan <ip> <min port> <max port>")
                 else:
                     portscan(inarr[2], inarr[3], inarr[4])
             elif cmds[10] in user_in:
@@ -459,7 +459,7 @@ Misc commands:
             elif cmds[13] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
-                    print_msg("\'heartbleed\' usage: heartbleed <target ip> [memdumpfile])
+                    print_msg("\'heartbleed\' usage: heartbleed <target ip> [memdumpfile]")
                 elif len(inarr) == 2:
                     hb_test(inarr[1])
                 else:
