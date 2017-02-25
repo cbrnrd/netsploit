@@ -15,3 +15,4 @@ cd ../..
 echo -n "What is your shodan API key?"
 read key
 echo $key > .api_key
+chmod +x netsploit

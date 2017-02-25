@@ -14,6 +14,9 @@ except ImportError:
     print "Please install it with the following command: `pip install shodan`"
     sys.exit(1)
 
+if not os.path.isdir(os.getcwd() + '/tools'):
+    call(['bash', 'setup.sh'])
+
 try:
     with open('.api_key', 'r') as f:
         firstline = f.readline()
@@ -363,9 +366,15 @@ Misc commands:
                 if len(inarr) < 2 and not len(inarr) > 4:
                     print_msg("\'slowloris\' usage: slowloris <target IP> [port (default: 80)]")
                 elif len(inarr) == 3:
-                    slowloris(inarr[1], inarr[2])
+                    try:
+                        slowloris(inarr[1], inarr[2])
+                    except KeyboardInterrupt:
+                        continue
                 else:
-                    slowloris(inarr[1])
+                    try:
+                        slowloris(inarr[1])
+                    except KeyboardInterrupt:
+                        continue
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
