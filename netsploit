@@ -29,7 +29,7 @@ except:
     call(['bash', 'setup.sh'])
 
 key = firstline.strip()
-api = shodan.Shodan(key)
+
 def spinning_cursor():
     while True:
         for cursor in '|/-\\':
@@ -37,27 +37,24 @@ def spinning_cursor():
 class AnimThread(threading.Thread):
     def run(self):
         spinner = spinning_cursor()
-        try:
-            test = api.info()
-            sys.stdout.write("Starting netsploit ")
-            for _ in range(15):
-                sys.stdout.write(spinner.next())
-                sys.stdout.flush()
-                sleep(0.5)
-                sys.stdout.write('\b')
-
-        except:
-            print "\033[31mInvalid API key\033[0m"
-            sys.exit(0)
-
+        sys.stdout.write("Starting netsploit ")
+        for _ in range(15):
+            sys.stdout.write(spinner.next())
+            sys.stdout.flush()
+            sleep(0.5)
+            sys.stdout.write('\b')
     #def stop(self):
 #        sleep(10000000000)  # since you cant stop threads in python ¯\_(ツ)_/¯
 
 t = AnimThread()
 t.daemon = True
 t.start()
-
-
+api = shodan.Shodan(key)
+try:
+    test = api.info()
+except:
+    print "\033[31mInvalid API key\033[0m"
+    sys.exit(0)
 call(['clear'])
 class bcolors:
     HEADER   =  '\033[95m'
