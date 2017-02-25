@@ -6,6 +6,7 @@ try:
 except ImportError:
     print "You have not installed the shodan module."
     print "Please install it with the following command: `pip install shodan`"
+    sys.exit(1)
 
 KEY = ""
 try:
@@ -36,9 +37,10 @@ def print_good(msg):
     print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
 
 def banner():
-    return bcolors.HEADER + """         .__                   .___                      .__
+    return bcolors.HEADER + """
+         .__                   .___                      .__
   ______ |  |__     ____     __| _/ _____      ____      |__|   ____
- /  ___/ |  |  \   /  _ \   / __ |  \__  \    /    \     |  |  /  _ \
+ /  ___/ |  |  \   /  _ \   / __ |  \__  \    /    \     |  |  /  _ \\
  \___ \  |   Y  \ (  <_> ) / /_/ |   / __ \_ |   |  \    |  | (  <_> )
 /____  > |___|  /  \____/  \____ |  (____  / |___|  / /\ |__|  \____/
      \/       \/                \/       \/       \/  \/
