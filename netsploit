@@ -41,7 +41,7 @@ def startup_anim():
         time.sleep(0.2)
         sys.stdout.write('\b')
 
-t = Threading.thread(target=startup_anim)
+t = threading.Thread(target=startup_anim)
 t.setDaemon(True)
 t.start()
 api = shodan.Shodan(key)
