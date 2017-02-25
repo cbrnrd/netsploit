@@ -375,6 +375,7 @@ Networking commands:
   Command         Meaning
  ---------       ---------
   resolve        resolve the ip of a given hostname
+  robots         get a website's robots.txt
   myip           get your external IP
   slowloris      do a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
