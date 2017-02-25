@@ -54,7 +54,7 @@ class bcolors:
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam']
+'internet', 'cam', 'blacknurse']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -401,7 +401,8 @@ Networking commands:
 
   Command         Meaning
  ---------       ---------
-  cam            Open a random camera in your web browser
+  blacknurse     perform a blacknurse attack on a given ip
+  cam            open a random camera in your web browser
   internet       scan the whole internet on a given port (noisy)
   resolve        resolve the ip of a given hostname
   myip           get your external IP
@@ -525,6 +526,12 @@ Misc commands:
                     call(['zmap', '-p', port, '-o', inarr[2]])
             elif user_in == cmds[19]:
                 call(['./tools/c4.sh'])
+            elif cmds[20] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'blacknurse\' usage: blacknurse <ip>")
+                else:
+                    call(['./tools/blacknurse/blacknurse', inarr[1]])
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:

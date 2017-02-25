@@ -18,14 +18,16 @@ cd slowloris
 python setup.py install > /dev/null
 cd ..
 
+# c4 auto-execution script
 echo "#!/bin/bash"                                      >> c4.sh
 echo "os=uname"                                         >> c4.sh
-echo "if[\$os == \"Darwin\"]; then"                     >> c4.sh
-echo "  open $(curl -Ls git.io/c4 | gshuf | head -n1)"  >> c4.sh
+echo "if[ \$os == \"Darwin\" ]; then"                     >> c4.sh
+echo "  open \$(curl -Ls git.io/c4 | gshuf | head -n1)"  >> c4.sh
 echo "else"                                             >> c4.sh
-echo "  open $(curl -Ls git.io/c4 | shuf | head -n1)"   >> c4.sh
+echo "  open \$(curl -Ls git.io/c4 | shuf | head -n1)"   >> c4.sh
 echo "fi"                                               >> c4.sh
 chmod +x c4.sh
+
 # include some of my own tools as well
 git clone https://github.com/thecarterb/mail0wner.git > /dev/null
 cd mail0wner
@@ -33,10 +35,17 @@ bash install.sh > /dev/null
 cd ..
 git clone https://github.com/thecarterb/hb-test-copy heartbleed > /dev/null
 cd ..
+#blacknurse router attack
+git clone https://github.com/jedisct1/blacknurse > /dev/null
+cd blacknurse
+make
+cd ..
 
 if [$os == "Darwin"]; then
   echo -e "Installing zmap"
   brew install zmap > /dev/null
+  echo -e "Installing coreutils"
+  brew install coreutils > /dev/null
 else
   echo -e "Installing zmap"
   apt-get install -y zmap > /dev/null
