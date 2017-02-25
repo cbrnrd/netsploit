@@ -132,7 +132,7 @@ banner3 = bcolors.OKGREEN + """
     `Mb.           `YMMMb`OOOI,,,,,IOOOO'dMMMP'           ,dM'
       `'                  `OObNNNNNdOO'                   `'
                             `~OOOOO~'   BLEEG BLERG, ALL YOUR PLANETS ARE BELONG TO US
-"""
+""" + bcolors.ENDC
 
 banner4 = """
 　 ｀¨ －　､　　　　　＿_　　　　　 _,. -‐' ¨´
@@ -339,7 +339,7 @@ Misc commands:
                 inarr = user_in.split(' ')
                 call(inarr[1:])  # This doesn't really need its own function, as it's only used once
             elif user_in == cmds[7]:
-                print ban
+                banner()
             elif cmds[8] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
