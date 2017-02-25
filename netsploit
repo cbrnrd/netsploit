@@ -145,13 +145,13 @@ banner4 = """
 """
 randnum = randint(1, 4)
 if randnum == 1:
-    print banner1
+    return banner1
 elif randnum == 2:
-    print banner2
+    return banner2
 elif randnum == 3:
-    print banner3
+    return banner3
 else:
-    print banner4
+    return banner4
 
 def search(content, outfile=False, filename=''):
     print_msg("Searching for {}".format(content))
@@ -304,8 +304,6 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
-
-  banner         print starting banner
   search         basic shodan search
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
@@ -323,10 +321,11 @@ Misc commands:
 
   Command         Meaning
  ---------       ---------
+  banner         print a starting banner
   clear          clear the screen
   help           print this help message
-  exec           execute command line commands
-  exit           exit shodan-cli
+  exec           execute shell commands
+  exit           exit netsploit
                 """
             elif user_in == '':
                 pass
@@ -339,7 +338,8 @@ Misc commands:
                 inarr = user_in.split(' ')
                 call(inarr[1:])  # This doesn't really need its own function, as it's only used once
             elif user_in == cmds[7]:
-                banner()
+                ban = banner()
+                print ban
             elif cmds[8] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
