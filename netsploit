@@ -169,7 +169,7 @@ def banner():
             )    0 `+a_ W__ 9,___"^^"+_     L   0                k
      _x-*v+"     9    0   "b    "_    "p   _0   `&    ___       d_
 
-    """.format(bcolors.ENDC, "\033[033m", bcolors.ENDC, "\033[033m")
+    {}""".format(bcolors.ENDC, "\033[033m", bcolors.ENDC, "\033[033m", bcolors.ENDC)
     randnum = randint(1, 4)
     if randnum == 1:
         return banner1
