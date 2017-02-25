@@ -42,7 +42,7 @@ def banner():
  \___ \  |   Y  \ (  <_> ) / /_/ |   / __ \_ |   |  \    |  | (  <_> )
 /____  > |___|  /  \____/  \____ |  (____  / |___|  / /\ |__|  \____/
      \/       \/                \/       \/       \/  \/
- {}By thecarterb <0xCB[at]protonmail.com>""".format(bolors.ENDC)
+ {}By thecarterb <0xCB[at]protonmail.com>""".format(bcolors.ENDC)
 
 def search(content, outfile=False, filename=''):
     print_msg("Searching for {}".format(content))
