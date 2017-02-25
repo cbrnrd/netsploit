@@ -42,7 +42,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan']
+'portscan', 'slowloris']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -252,6 +252,9 @@ def portscan(host, mini, maxi):
             open_ports += 1
     print_msg("{} has {} open ports.".format(host, open_ports))
 
+def slowloris(tgt, port=80):
+    print_msg("Attacking {} on port {}".format(tgt, port))
+    call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
 
 def main():
     ban = banner()
@@ -313,8 +316,9 @@ Networking commands:
 
   Command         Meaning
  ---------       ---------
-  resolve         resolve the ip of a given hostname
+  resolve        resolve the ip of a given hostname
   myip           get your external IP
+  slowloris      do a slowloris attack on a target(IP)
 
 
 Misc commands:
@@ -354,6 +358,14 @@ Misc commands:
                     print "\'portscan\' usage: portscan <ip> <min port> <max port>"
                 else:
                     portscan(inarr[2], inarr[3], inarr[4])
+            elif cmds[10] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2 and not len(inarr) > 4:
+                    print_msg("\'slowloris\' usage: slowloris <target IP> [port (default: 80)]")
+                elif len(inarr) == 3:
+                    slowloris(inarr[1], int(inarr[2]))
+                else:
+                    slowloris(inarr[1])
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
