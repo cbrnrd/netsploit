@@ -53,7 +53,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore']
+'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -312,14 +312,22 @@ def honey(ip):
             print_good("{} is a honeypot!".format(ip))
         elif score > 0.5:
             print "{}[-]{}{ } is probably a honeypot.".format(bcolors.WARN, bcolors.ENDC, ip)
-        elif score < 0.5 and score is not 0.0:
+        elif score <= 0.5 and score is not 0.0:
             pring_msg("{} is probably not a honeypot.".format(ip))
         else:
             print_err("{} is not a honeypot.".format(ip))
         print_msg("{} honeyscore: {}".format(ip, score))
-    except:
-        print_err("Could not determine honeyscore.")
+    except Exception as e:
+        print_err("Could not determine honeyscore. ({})".format(e))
 
+def protocols():
+    try:
+        prots = api.protocols()
+
+        for name, description in iter(protocols.items()):
+            print_msg('{0:<30}'.format(name), description)
+    except shodan.APIError as e:
+        print_err(str(e))
 
 #####################
 #                   #
@@ -382,6 +390,7 @@ Shodan commands:
   3d             open shodan 3d in your browser
   honeyscore     check if an ip is a honeypot or not (0.0 - 1.0)
   key            display your shodan API key
+  protocols      show protocols you can scan
   search         basic shodan search
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
@@ -392,7 +401,6 @@ Networking commands:
   Command         Meaning
  ---------       ---------
   resolve        resolve the ip of a given hostname
-  robots         get a website's robots.txt
   myip           get your external IP
   slowloris      do a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
@@ -410,6 +418,8 @@ Misc commands:
   exec           execute shell commands
   exit           exit netsploit
                 """
+#robots         get a website's robots.txt
+
             elif user_in == '':
                 pass
             elif user_in == "clear":
@@ -496,6 +506,8 @@ Misc commands:
                     print_msg("\'honeyscore\' usage: honeyscore <ip>")
                 else:
                     honey(inarr[1])
+            elif cmds[17] in user_in:
+                protocols()
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
