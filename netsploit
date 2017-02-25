@@ -5,6 +5,7 @@ import re
 import os
 import urllib
 import socket
+from time import sleep
 from random import randint
 from subprocess import call
 try:
@@ -45,7 +46,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris']
+'portscan', 'slowloris', 'ssl', 'mailsniff']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -258,16 +259,34 @@ def portscan(host, mini, maxi):
 def slowloris(tgt, port='80'):
     print_msg("Attacking {} on port {}".format(tgt, port))
     call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
+    
+def ssl(target, outfile, filename=''):
+    if not outfile:
+        print_msg("Analyzing {}".format(target))
+        print_msg("Printing to STDOUT")
+        call(['sslyze', '--regular', target])
+    else:
+        print_msg("Analyzing {}".format(target))
+        print_msg("Outputting to {}".format(filename))
+        call(['sslyze', '--regular', target, ' > ', filename])
 
+def mailsniff(interface, time):
+    try:
+        call(['python', 'tools/mail0wner/mail0wner.py', '-q', '-i', interface, '-t', time])
+    except KeyboardInterrupt:
+        print_err("Stopping sniff...")
+        sleep(1)
+
+# From here on out, this is ALL prompt input handling
 def main():
     ban = banner()
     print ban
     while True:
         try:
-            user_in = raw_input(bcolors.UL + "nsploit{} > ".format(bcolors.ENDC))
+            user_in = raw_input(bcolors.UL + "nsploit{} > ".format(bcolors.ENDC))  # prompt
 
 
-            # NOTE: input validation needs to be fixed. right now
+            # BUG: input validation needs to be fixed. right now
             # if "search" and "facets" are in the same input
             # line, it doesnt know what to do. It's assuming
             # the standard input, but bugs WILL occur if it's
@@ -323,6 +342,7 @@ Networking commands:
   resolve        resolve the ip of a given hostname
   myip           get your external IP
   slowloris      do a slowloris attack on a target(IP)
+  ssl            do a scan of the targets SSL configuration
 
 
 Misc commands:
@@ -376,8 +396,26 @@ Misc commands:
                         slowloris(inarr[1])
                     except KeyboardInterrupt:
                         continue
+            elif cmds[11] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'ssl\' usage: ssl <target> [outfilename]")
+                elif len(inarr) == 2:
+                    ssl(inarr[1])
+                elif len(inarr) == 3:
+                    ssl(inarr[1], True, inarr[2])
             elif user_in == "key":
                 print_msg("Your Shodan API key is: {}".format(key))
+            elif cmds[12] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'mailsniff\' usage: mailsniff <interface> <time>")
+                elif len(inarr) == 2:
+                    print_err("Not a full command!")
+                    print_msg("\'mailsniff\' usage: mailsniff <interface> <time>")
+                else:
+                    mailsniff(inarr[1], inarr[2])
+
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
