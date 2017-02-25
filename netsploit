@@ -38,7 +38,7 @@ def startup_anim():
     for _ in range(50):
         sys.stdout.write("Starting netsploit" + spinner.next())
         sys.stdout.flush()
-        time.sleep(0.2)
+        sleep(0.2)
         sys.stdout.write('\b')
 
 t = threading.Thread(target=startup_anim)
