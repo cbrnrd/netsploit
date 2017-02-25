@@ -4,6 +4,7 @@
 # just because of the package managers installing zmap
 
 os = uname
+echo -e "Detected $os"
 echo -e "Installing shodan"
 pip install shodan > /dev/null
 echo -e "Done!"

@@ -516,6 +516,8 @@ Misc commands:
                     print_msg("\'internet\' usage: internet <port> [outfilename]")
                 elif len(inarr) == 2:
                     print_msg("Outputting to STDOUT.")
+                    print_msg("This will produce a lot of data, it is recommended to output to a file.")
+                    sleep(3)
                     call(['zmap', '-p', inarr[1]])  # again, a function isn't really needed
                 elif len(inarr) == 3:
                     print_msg("Outputting to {}".format(inarr[2]))
