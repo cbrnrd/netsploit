@@ -4,6 +4,7 @@ import sys
 import re
 import os
 import urllib
+import socket
 from subprocess import call
 try:
     import shodan
@@ -72,8 +73,10 @@ def search(content, outfile=False, filename=''):
 
 def search_host(hostname, outfile=False, filename=''):
     if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
-        hstip = hostname.gethostbyname()
-    print_msg("Searching shodan for {}({})...".format(hstip, hostname))
+        hstip = socket.gethostbyname(hostname)
+        print_msg("Searching shodan for {}({})...".format(hstip, hostname))
+    else:
+        print_msg("Searching for {}".format(hostname))
     if outfile:
         print_msg("Outputting results to: %s" % filename)
     else:
