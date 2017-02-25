@@ -17,6 +17,15 @@ git clone https://github.com/gkbrk/slowloris > /dev/null
 cd slowloris
 python setup.py install > /dev/null
 cd ..
+
+echo "#!/bin/bash"                                      >> c4.sh
+echo "os=uname"                                         >> c4.sh
+echo "if[\$os == \"Darwin\"]; then"                     >> c4.sh
+echo "  open $(curl -Ls git.io/c4 | gshuf | head -n1)"  >> c4.sh
+echo "else"                                             >> c4.sh
+echo "  open $(curl -Ls git.io/c4 | shuf | head -n1)"   >> c4.sh
+echo "fi"                                               >> c4.sh
+chmod +x c4.sh
 # include some of my own tools as well
 git clone https://github.com/thecarterb/mail0wner.git > /dev/null
 cd mail0wner
