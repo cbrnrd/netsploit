@@ -36,10 +36,10 @@ def spinning_cursor():
 def startup_anim():
     spinner = spinning_cursor()
     for _ in range(50):
-    sys.stdout.write("Starting netsploit" + spinner.next())
-    sys.stdout.flush()
-    time.sleep(0.2)
-    sys.stdout.write('\b')
+        sys.stdout.write("Starting netsploit" + spinner.next())
+        sys.stdout.flush()
+        time.sleep(0.2)
+        sys.stdout.write('\b')
 
 t = Threading.thread(target=startup_anim)
 t.setDaemon(True)
