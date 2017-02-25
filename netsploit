@@ -33,16 +33,17 @@ def spinning_cursor():
     while True:
         for cursor in '|/-\\':
             yield cursor
-def startup_anim():
+class AnimThread(threading.Thread):
     spinner = spinning_cursor()
-    for _ in range(50):
-        sys.stdout.write("Starting netsploit" + spinner.next())
-        sys.stdout.flush()
-        sleep(0.2)
-        sys.stdout.write('\b')
+    def run(self):
+        for _ in range(50):
+            sys.stdout.write("Starting netsploit" + spinner.next())
+            sys.stdout.flush()
+            sleep(0.2)
+            sys.stdout.write('\b')
 
-t = threading.Thread(target=startup_anim)
-t.setDaemon(True)
+t = AnimThread()
+t.daemon = True
 t.start()
 api = shodan.Shodan(key)
 try:
@@ -50,7 +51,7 @@ try:
 except:
     print "\033[31mInvalid API key\033[0m"
     sys.exit(0)
-t.stop()
+t._stop()
 class bcolors:
     HEADER   =  '\033[95m'
     OKBLUE   =  '\033[34m'
