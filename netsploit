@@ -54,7 +54,7 @@ class bcolors:
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse']
+'internet', 'cam', 'blacknurse', 'cfresolve']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -314,13 +314,6 @@ def hb_test(target, outfile=False, filename=''):
         print_msg("Outputting to {}".format(filename))
         call(['python', 'tools/heartbleed/hb-test.py', '-f', filename, target])
 
-def getbots(host):
-    try:
-        with closing(urlopen("https://www.google.com/robots.txt")) as stream:
-            print stream.read()
-    except:
-        print_err("{} doesnt have a robots.txt file".format(host))
-
 def honey(ip):
     try:
         score = api.labs.honeyscore(ip)
@@ -418,10 +411,11 @@ Networking commands:
  ---------       ---------
   blacknurse     perform a blacknurse attack on a given ip
   cam            open a random camera in your web browser
+  cfresolve      attempt to resolve a domain protected by couldflare
   internet       scan the whole internet on a given port (noisy)
   resolve        resolve the ip of a given hostname
   myip           get your external IP
-  slowloris      do a slowloris attack on a target(IP)
+  slowloris      perform a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
   mailsniff      sniff the local network for email credentials
   heartbleed     determine if a server is vulnerable to heartbleed
@@ -437,7 +431,6 @@ Misc commands:
   exec           execute shell commands
   exit           exit netsploit
                 """
-#robots         get a website's robots.txt
 
             elif user_in == '':
                 pass
@@ -513,10 +506,7 @@ Misc commands:
                 webbrowser.open(url, new=new)
             elif cmds[15] in user_in:
                 inarr = user_in.split(' ')
-                if len(inarr) < 2:
-                    print_msg("\'robots\' usage: robots <host>")
-                elif len(inarr) == 2:
-                    getbots(inarr[1])
+                print_err("Unknown statement: robots")
                 else:
                     pass
             elif cmds[16] in user_in:
@@ -547,6 +537,15 @@ Misc commands:
                     print_msg("\'blacknurse\' usage: blacknurse <ip>")
                 else:
                     call(['./tools/blacknurse/blacknurse', inarr[1]])
+            elif cmds[21] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'cfresolve\' usage: cfresolve <domain>")
+                elif len(inarr) == 2:
+                    call(['python', 'tools/cf-resolve.py', inarr[1]])
+                else:
+                    pass
+
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
