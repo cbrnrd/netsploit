@@ -33,7 +33,7 @@ class bcolors:
     UL       =  '\033[4m'
 
 # predefine commands
-cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner']
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -48,12 +48,36 @@ def print_good(msg):
 
 def banner():
     return bcolors.FAIL + bcolors.BOLD + """
-         .__                   .___                      .__
-  ______ |  |__     ____     __| _/ _____      ____      |__|   ____
- /  ___/ |  |  \   /  _ \   / __ |  \__  \    /    \     |  |  /  _ \\
- \___ \  |   Y  \ (  <_> ) / /_/ |   / __ \_ |   |  \    |  | (  <_> )
-/____  > |___|  /  \____/  \____ |  (____  / |___|  / /\ |__|  \____/
-     \/       \/                \/       \/       \/  \/
+                         .-.
+                         '-'
+                        //
+               _..---._/|
+             .' ."     '-.
+            /__/          \      *
+           ====_____     __|     :
+          /#   #\"\"\" |   /()\    :    ..*
+          |#   #    |   \__/    : .''
+          \#___#____|      /   :::.. .
+           \______________|_...‰_: .. '*
+  ()       // /\||||)))))))      '   . .
+ .( \_     \\_\//   _-'.'/        |   * ..
+( )  |^|^|^|ooo/  _#\.//\"\"\"_      |   . . .
+(_)_.'v|v|v|     / \#  \_ / '_  _'    . .
+           | _ _/_/     /'./_-|\"         . .
+           /#_#__\"\"\"-._ /#  \__)       .  .
+           |__   \"\"-._ |##               . . .
+           |  \"\"|-\"\"\"-_/##              . .
+           /\"\"--\__.-|                       .
+           \-_.-<__ /                   .   .
+           /-_| /  \
+           \-_| \_-<.                        .  .
+           <_-/ <_.-\                    .
+           <_-|  |_.-|                        .
+      .----|   \__\  |                 .
+     |     .\"\"\"   '.  |                       .
+      .___|        |__|  The network seems good, time to prove you wrong.
+          '.__...\"\"\"
+
  {}By thecarterb <0xCB[at]protonmail.com>""".format(bcolors.ENDC)
 
 def search(content, outfile=False, filename=''):
@@ -75,13 +99,15 @@ def search_host(hostname, outfile=False, filename=''):
     if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
         hstip = socket.gethostbyname(hostname)
         print_msg("Searching shodan for {}({})...".format(hstip, hostname))
+        host = api.host(hstip)
     else:
         print_msg("Searching for {}".format(hostname))
+        host = api.host(hostname)
     if outfile:
         print_msg("Outputting results to: %s" % filename)
     else:
         print_msg("Outputting results to STDOUT")
-    host = api.host(hostname)
+
     if outfile:
         with open(filename, 'w') as outf:
             outf.write("IP: %s\n" % host['ip_str'])
@@ -190,6 +216,8 @@ def main():
 
             elif user_in == cmds[4]: # help, TODO: update facets() to original
                 print """
+Shodan commands:
+
   Command         Meaning
  ---------       ---------
 
@@ -198,6 +226,15 @@ def main():
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
   myip           get your external IP
+
+Networking commands:
+  Command         Meaning
+ ---------       ---------
+ resolve         resolve the ip of a given hostname
+
+Misc commands:
+  Command         Meaning
+ ---------       ---------
   help           print this help message
   exec           execute command line commands
   exit           exit shodan-cli
@@ -214,6 +251,9 @@ def main():
                 call(inarr[1:])  # This doesn't really need its own function, as it's only used once
             elif user_in == cmds[7]:
                 print ban
+            elif cmds[8] in user_in:
+                inarr = user_in.split(' ')
+                socket.gethostbyname(inarr[1])
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
