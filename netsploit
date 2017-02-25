@@ -235,24 +235,38 @@ def search_host(hostname, outfile=False, filename=''):
                 Banner: %s
         """ % (item['port'], item['data'])
 
-def facet_search(query, num):
-    FACETS = [
-        'org',
-        'domain',
-        'port',
-        'asn',
+def facet_search(query):
+try:
+# The list of properties we want summary information on
+FACETS = [
+    'org',
+    'domain',
+    'port',
+    'asn',
 
-        ('country', num),
+    # We only care about the top 5 countries, this is how we let Shodan know to return 5 instead of the
+    # default 10 for a facet. If you want to see more than 10, you could do ('country', 1000) for example
+    # to see the top 1,000 countries for a search query.
+    ('country', 5),
 ]
 
-    FACET_TITLES = {
-        'org': 'Top {} Organizations'.format(num),
-        'domain': 'Top {} Domains'.format(num),
-        'port': 'Top {} Ports'.format(num),
-        'asn': 'Top {} Autonomous Systems'.format(num),
-        'country': 'Top {} Countries'.format(num),
-    }
-    print_msg("Searching for facets (top {} results)".format(num))
+FACET_TITLES = {
+    'org': 'Top 10 Organizations',
+    'domain': 'Top 10 Domains',
+    'port': 'Top 10 Ports',
+    'asn': 'Top 10 Autonomous Systems',
+    'country': 'Top 5 Countries',
+}
+
+try:
+    # Setup the api
+    api = shodan.Shodan(API_KEY)
+
+    # Generate a query string out of the command-line arguments
+    query = ' '.join(query)
+
+    # Use the count() method because it doesn't return results and doesn't require a paid API plan
+    # And it also runs faster than doing a search().
     result = api.count(query, facets=FACETS)
 
     print 'Shodan Summary Information'
@@ -261,13 +275,14 @@ def facet_search(query, num):
 
     # Print the summary info from the facets
     for facet in result['facets']:
-        print FACET_TITLES[facet].replace()
+        print FACET_TITLES[facet]
 
         for term in result['facets'][facet]:
             print '%s: %s' % (term['value'], term['count'])
 
         # Print an empty line between summary info
         print ''
+
 
 def myip():
     f = urllib.urlopen("http://www.canyouseeme.org/")
@@ -388,9 +403,9 @@ def main():
                 elif len(inarr) == 2:
                     print_msg("Missing country number")
                 elif len(inarr) == 3:
-                    facet_search(inarr[1:], inarr[len(inarr) - 1])  # TODO test this
+                    facet_search(inarr[1:])
 
-            elif user_in == cmds[4]: # help, TODO: update facets() to original
+            elif user_in == cmds[4]: # help
                 print """
 Shodan commands:
 
