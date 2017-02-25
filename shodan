@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # coding=utf-8
 import sys
+import re
 try:
     import shodan
 except ImportError:
@@ -22,10 +23,10 @@ class bcolors:
     ENDC     =  '\033[0m'
     BOLD     =  '\033[1m'
     TITLE    =  '\033[96m'
-    UL       =  '\033[4m]'
+    UL       =  '\033[4m'
 
 # predefine commands
-cmds = ['search', 'exit', 'search_host', 'facets', 'help']
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'account']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -100,13 +101,13 @@ def facet_search(query, num):
 ]
 
     FACET_TITLES = {
-        'org': 'Top 10 Organizations',
-        'domain': 'Top 10 Domains',
-        'port': 'Top 10 Ports',
-        'asn': 'Top 10 Autonomous Systems',
-        'country': 'Top 5 Countries',
+        'org': 'Top {} Organizations'.format(num),
+        'domain': 'Top {} Domains'.format(num),
+        'port': 'Top {} Ports'.format(num),
+        'asn': 'Top {} Autonomous Systems'.format(num),
+        'country': 'Top {} Countries'.format(num),
     }
-
+    print_msg("Searching for facets (top {} results)".format(num))
     result = api.count(query, facets=FACETS)
 
     print 'Shodan Summary Information'
@@ -115,7 +116,7 @@ def facet_search(query, num):
 
     # Print the summary info from the facets
     for facet in result['facets']:
-        print FACET_TITLES[facet]
+        print FACET_TITLES[facet].replace()
 
         for term in result['facets'][facet]:
             print '%s: %s' % (term['value'], term['count'])
@@ -182,7 +183,7 @@ def main():
             elif user_in == '':
                 pass
             else:
-                print_err("Unknown comand: {}".format(user_in))
+                print_err("Unknown command: {}".format(user_in))
         except KeyboardInterrupt:
             print_msg("Use \"exit\" to exit the program")
             pass
