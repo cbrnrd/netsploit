@@ -146,7 +146,7 @@ def banner():
                                 `~OOOOO~'   BLEEG BLERG, ALL YOUR PACKETS ARE BELONG TO US
     """ + bcolors.ENDC
 
-    banner4 = """"\033[0,33m"
+    banner4 = """\033[033m""
     ^+xw*\"\"\"^q_  0 p" F  F _F  p^^"___jM   j  F              F
       _,,__   q x" [  F J_ J  P  w\"\"\"\"_  _,"  9  _m^`"*____x"    _____
  v,,_w"   "M_ @ `, ",_!u_9__L F #  r^""^^"    f j"      "      _*"   "6_
