@@ -445,7 +445,7 @@ Misc commands:
             elif user_in == cmds[7]:
                 ban = banner()
                 print ban
-            elif cmds[8] in user_in:
+            elif cmds[8] in user_in and not "cfresolve" in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print "\'resolve\' usage: resolve <domain>"
