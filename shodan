@@ -37,7 +37,7 @@ def print_good(msg):
     print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
 
 def banner():
-    return bcolors.HEADER + """
+    return bcolors.FAIL + bcolors.BOLD + """
          .__                   .___                      .__
   ______ |  |__     ____     __| _/ _____      ____      |__|   ____
  /  ___/ |  |  \   /  _ \   / __ |  \__  \    /    \     |  |  /  _ \\
@@ -151,7 +151,7 @@ def main():
                 elif len(inarr) == 3:
                     search_host(inarr[1], True, inarr[2])
 
-            elif user_in == cmds[3]:
+            elif user_in == cmds[3]: # facets
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("\'facets\' usage: facets \"<search query>\" <number of countries>")
@@ -159,6 +159,17 @@ def main():
                     print_msg("Missing country number")
                 elif len(inarr) == 3:
                     facet_search(inarr[1:], inarr[len(inarr) - 1])  # TODO test this
+            elif user_in == cmds[4]:
+                print """
+                Command         Meaning
+               ---------       ---------
+
+                search         basic shodan search
+                search_host    search shodan for a given host
+                facets         get facet data from shodan (top ports, services, etc.)
+                help           print this help message
+                exit           exit shodan-cli
+                """
         except KeyboardInterrupt:
             print_msg("Use \"exit\" to exit the program")
             pass
