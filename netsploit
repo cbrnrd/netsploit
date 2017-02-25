@@ -6,6 +6,7 @@ import os
 import urllib
 import socket
 import threading
+import webbrowser
 from time import sleep
 from random import randint
 from subprocess import call
@@ -68,7 +69,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed']
+'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -373,6 +374,7 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
+  3d             Open shodan 3d in your browser
   key            display your shodan API key
   search         basic shodan search
   search_host    search shodan for a given host
@@ -469,7 +471,10 @@ Misc commands:
                     hb_test(inarr[1])
                 else:
                     hb_test(inarr[1], True, inarr[2])
-
+            elif user_input == cmds[14]:
+                new = 2
+                url = "https://simple.shodan.io/"
+                webbrowser.open(url, new=new)
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
