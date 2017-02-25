@@ -514,9 +514,8 @@ Misc commands:
                 else:
                     hb_test(inarr[1], True, inarr[2])
             elif user_in == cmds[14]:
-                new = 2
                 url = "https://simple.shodan.io/"
-                webbrowser.open(url, new=new)
+                call(['open', url])
             elif cmds[15] in user_in:
                 inarr = user_in.split(' ')
                 print_err("Unknown statement: robots")
