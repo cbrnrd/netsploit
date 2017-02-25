@@ -507,8 +507,6 @@ Misc commands:
             elif cmds[15] in user_in:
                 inarr = user_in.split(' ')
                 print_err("Unknown statement: robots")
-                else:
-                    pass
             elif cmds[16] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
