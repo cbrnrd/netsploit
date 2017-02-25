@@ -53,7 +53,7 @@ try:
 except:
     print "\033[31mInvalid API key\033[0m"
     sys.exit(0)
-t._stop()
+t.stop()
 class bcolors:
     HEADER   =  '\033[95m'
     OKBLUE   =  '\033[34m'
