@@ -34,8 +34,8 @@ def spinning_cursor():
         for cursor in '|/-\\':
             yield cursor
 class AnimThread(threading.Thread):
-    spinner = spinning_cursor()
     def run(self):
+        spinner = spinning_cursor()
         for _ in range(50):
             sys.stdout.write("Starting netsploit" + spinner.next())
             sys.stdout.flush()
