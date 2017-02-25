@@ -11,6 +11,8 @@ except ImportError:
     print "Please install it with the following command: `pip install shodan`"
     sys.exit(1)
 
+global api
+
 def first_time_run():
     if not os.path.isfile(".api_key"):
         print_msg("Detected first run.")
@@ -26,12 +28,14 @@ def first_time_run():
 
         with open('.api_key', 'w') as f:
             f.write(key)
+        f.close()
         print_good("The key is good!")
         return key
 
 try:
     with open(".api_key", 'r') as f:
         api = shodan.Shodan(f.read())
+    f.close()
 except Exception as e:
     first_time_run
 
