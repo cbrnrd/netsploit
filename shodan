@@ -67,11 +67,13 @@ def search(content, outfile=False, filename=''):
             for result in results['matches']:
                 outf.write(result['ip_str'] + "\n")
     else:
-        for retult in results['matches']:
+        for result in results['matches']:
             print_good(result['ip_str'])
 
 def search_host(hostname, outfile=False, filename=''):
-    print_msg("Searching shodan...")
+    if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
+        hstip = hostname.gethostname()
+    print_msg("Searching shodan for {}({})...".format(hstip, hostname))
     if outfile:
         print_msg("Outputting results to: %s" % filename)
     else:
