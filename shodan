@@ -11,33 +11,12 @@ except ImportError:
     print "Please install it with the following command: `pip install shodan`"
     sys.exit(1)
 
-global api
-
-def first_time_run():
-    if not os.path.isfile(".api_key"):
-        print_msg("Detected first run.")
-        key = raw_input("What is your shodan API key? ")
-        key = key.strip()
-    try:
-        api = shodan.Shodan(key)
-        test = api.info()
-    except shodan.APIError, e:
-        print_err("Invalid API key")
-        sys.exit(1)
-    finally:
-
-        with open('.api_key', 'w') as f:
-            f.write(key)
-        f.close()
-        print_good("The key is good!")
-        return key
-
+key = ''  # Your API key here
+api = shodan.Shodan(key)
 try:
-    with open(".api_key", 'r') as f:
-        api = shodan.Shodan(f.read())
-    f.close()
-except Exception as e:
-    first_time_run
+    test = api.info()
+except:
+    print "\033[93m Invalid API key\033[0m"
 
 class bcolors:
     HEADER   =  '\033[95m'
