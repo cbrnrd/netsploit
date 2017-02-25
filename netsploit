@@ -239,12 +239,16 @@ Shodan commands:
   facets         gets top ports, services, companies, etc.
   myip           get your external IP
 
+
 Networking commands:
+
   Command         Meaning
  ---------       ---------
  resolve         resolve the ip of a given hostname
 
+
 Misc commands:
+
   Command         Meaning
  ---------       ---------
   help           print this help message
