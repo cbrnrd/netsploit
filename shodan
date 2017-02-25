@@ -33,7 +33,7 @@ class bcolors:
     UL       =  '\033[4m'
 
 # predefine commands
-cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip']
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -207,10 +207,13 @@ def main():
                 call(["clear"])
             elif user_in == cmds[5]:
                 myip()
+            elif cmds[6] in user_in:
+                inarr = user_in.split(' ')
+                call(inarr)  # This doesn't really need its own function, as it's only used once
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
-            print_err("Error: %s" % e)
+            print_err(e)
             pass
         except KeyboardInterrupt:
             print "\n"
