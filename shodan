@@ -33,7 +33,7 @@ class bcolors:
     UL       =  '\033[4m'
 
 # predefine commands
-cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec']
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -148,7 +148,7 @@ def main():
     print ban
     while True:
         try:
-            user_in = raw_input(bcolors.UL + "shodan{}> ".format(bcolors.ENDC))
+            user_in = raw_input(bcolors.UL + "shodan{} > ".format(bcolors.ENDC))
 
 
             # NOTE: input validation needs to be fixed. right now
@@ -193,6 +193,7 @@ def main():
   Command         Meaning
  ---------       ---------
 
+  banner         print starting banner
   search         basic shodan search
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
@@ -211,6 +212,8 @@ def main():
             elif cmds[6] in user_in:
                 inarr = user_in.split(' ')
                 call(inarr[1:])  # This doesn't really need its own function, as it's only used once
+            elif user_in == cmds[7]:
+                print ban
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
