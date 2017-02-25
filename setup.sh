@@ -40,7 +40,7 @@ git clone https://github.com/jedisct1/blacknurse > /dev/null
 cd blacknurse
 make
 cd ..
-http://pastebin.com/raw/kGQ6qquB
+wget http://pastebin.com/raw/kGQ6qquB
 mv kGQ6qquB cf-resolve.py
 
 if [$os == "Darwin"]; then
