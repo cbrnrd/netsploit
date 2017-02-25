@@ -313,7 +313,7 @@ def honey(ip):
             print_good("{} is a honeypot!".format(ip))
         elif score > 0.5:
             print "{}[-]{}{ } is probably a honeypot.".format(bcolors.WARN, bcolors.ENDC, ip)
-        elif score <= 0.5 and score is not 0.0:
+        elif score <= 0.5 and score != 0.0:
             print_msg("{} is probably not a honeypot.".format(ip))
         else:
             print_err("{} is not a honeypot.".format(ip))
