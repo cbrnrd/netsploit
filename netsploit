@@ -310,6 +310,7 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
+  key            display your shodan API key
   search         basic shodan search
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
@@ -375,6 +376,8 @@ Misc commands:
                         slowloris(inarr[1])
                     except KeyboardInterrupt:
                         continue
+            elif user_in == "key":
+                print_msg("Your Shodan API key is: {}".format(key))
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
