@@ -237,7 +237,6 @@ Shodan commands:
   search         basic shodan search
   search_host    search shodan for a given host
   facets         gets top ports, services, companies, etc.
-  myip           get your external IP
 
 
 Networking commands:
@@ -245,12 +244,14 @@ Networking commands:
   Command         Meaning
  ---------       ---------
   resolve         resolve the ip of a given hostname
+  myip           get your external IP
 
 
 Misc commands:
 
   Command         Meaning
  ---------       ---------
+  clear          clear the screen
   help           print this help message
   exec           execute command line commands
   exit           exit shodan-cli
