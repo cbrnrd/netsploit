@@ -200,6 +200,8 @@ def main():
             elif user_in == "clear":
                 print_msg("exec: clear")
                 call(["clear"])
+            elif user_in == cmds[5]:
+                myip()
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
