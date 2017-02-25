@@ -30,25 +30,7 @@ except:
 
 key = firstline.strip()
 
-def spinning_cursor():
-    while True:
-        for cursor in '|/-\\':
-            yield cursor
-class AnimThread(threading.Thread):
-    def run(self):
-        spinner = spinning_cursor()
-        sys.stdout.write("Starting netsploit ")
-        for _ in range(15):
-            sys.stdout.write(spinner.next())
-            sys.stdout.flush()
-            sleep(0.5)
-            sys.stdout.write('\b')
-    #def stop(self):
-#        sleep(10000000000)  # since you cant stop threads in python ¯\_(ツ)_/¯
-
-t = AnimThread()
-t.daemon = True
-t.start()
+print "\033[96mStarting netsploit...\033[0m"
 api = shodan.Shodan(key)
 try:
     test = api.info()
