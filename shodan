@@ -22,6 +22,7 @@ class bcolors:
     ENDC     =  '\033[0m'
     BOLD     =  '\033[1m'
     TITLE    =  '\033[96m'
+    UL       =  '\033[4m]'
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help']
@@ -127,9 +128,16 @@ def main():
     print ban
     while True:
         try:
-            user_in = raw_input("shodan > ")
+            user_in = raw_input(bcolors.UL + "shodan{}> ".format(bcolors.ENDC))
 
-            if user_in == cmds[0]:  # search
+
+            # NOTE: input validation needs to be fixed. right now
+            # if "search" and "facets" are in the same input
+            # line, it doesnt know what to do. It's assuming
+            # the standard input, but bugs WILL occur if it's
+            # not formatted correctly
+
+            if cmds[0] in user_in:  # search
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print "\'search\' usage: search <query> [output_file]"
@@ -138,11 +146,11 @@ def main():
                 elif len(inarr) == 3:
                     search(inarr[1], True, inarr[2])
 
-            elif user_in == cmds[1]:  # exit
+            elif cmds[1] in user_in:  # exit
                 print_err("Exiting.")
                 sys.exit(0)
 
-            elif user_in == cmds[2]:  # search_host
+            elif cmds[2] in user_in:  # search_host
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("\'search_host\' usage: search_host <hostname> [outfilename]")
@@ -151,7 +159,7 @@ def main():
                 elif len(inarr) == 3:
                     search_host(inarr[1], True, inarr[2])
 
-            elif user_in == cmds[3]: # facets
+            elif cmds[3] in user_in: # facets
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("\'facets\' usage: facets \"<search query>\" <number of countries>")
@@ -159,17 +167,22 @@ def main():
                     print_msg("Missing country number")
                 elif len(inarr) == 3:
                     facet_search(inarr[1:], inarr[len(inarr) - 1])  # TODO test this
-            elif user_in == cmds[4]:
-                print """
-                Command         Meaning
-               ---------       ---------
 
-                search         basic shodan search
-                search_host    search shodan for a given host
-                facets         get facet data from shodan (top ports, services, etc.)
-                help           print this help message
-                exit           exit shodan-cli
+            elif user_in == cmds[4]: # help
+                print """
+  Command         Meaning
+ ---------       ---------
+
+  search         basic shodan search
+  search_host    search shodan for a given host
+  facets         get facet data from shodan (top ports, services, etc.)
+  help           print this help message
+  exit           exit shodan-cli
                 """
+            elif user_in == '':
+                pass
+            else:
+                print_err("Unknown comand: {}".format(user_in))
         except KeyboardInterrupt:
             print_msg("Use \"exit\" to exit the program")
             pass
