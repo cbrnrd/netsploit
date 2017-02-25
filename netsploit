@@ -143,7 +143,7 @@ def banner():
        YMb           ~YMMMM\`OOOOI`````IOOOOO'/MMMMP~           dMP
         `Mb.           `YMMMb`OOOI,,,,,IOOOO'dMMMP'           ,dM'
           `'                  `OObNNNNNdOO'                   `'
-                                `~OOOOO~'   BLEEG BLERG, ALL YOUR PLANETS ARE BELONG TO US
+                                `~OOOOO~'   BLEEG BLERG, ALL YOUR PACKETS ARE BELONG TO US
     """ + bcolors.ENDC
 
     banner4 = """"\033[0,33m"
@@ -410,12 +410,12 @@ Shodan commands:
   Command         Meaning
  ---------       ---------
   3d             open shodan 3d in your browser
+  facets         gets top ports, services, companies, etc.
   honeyscore     check if an ip is a honeypot or not (0.0 - 1.0)
   key            display your shodan API key
   protocols      show protocols you can scan
   search         basic shodan search
   search_host    search shodan for a given host
-  facets         gets top ports, services, companies, etc.
 
 
 Networking commands:
@@ -425,13 +425,13 @@ Networking commands:
   blacknurse     perform a blacknurse attack on a given ip
   cam            open a random camera in your web browser
   cfresolve      attempt to resolve a domain protected by couldflare
+  heartbleed     determine if a server is vulnerable to heartbleed
   internet       scan the whole internet on a given port (noisy)
-  resolve        resolve the ip of a given hostname
   myip           get your external IP
+  mailsniff      sniff the local network for email credentials
+  resolve        resolve the ip of a given hostname
   slowloris      perform a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
-  mailsniff      sniff the local network for email credentials
-  heartbleed     determine if a server is vulnerable to heartbleed
 
 
 Misc commands:
@@ -440,9 +440,10 @@ Misc commands:
  ---------       ---------
   banner         print a starting banner
   clear          clear the screen
-  help           print this help message
   exec           execute shell commands
   exit           exit netsploit
+  help           print this help message
+
                 """
 
             elif user_in == '':
