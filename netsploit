@@ -324,7 +324,7 @@ def protocols():
     try:
         prots = api.protocols()
 
-        for name, description in iter(protocols.items()):
+        for name, description in iter(prots.items()):
             print_msg('{0:<30}'.format(name), description)
     except shodan.APIError as e:
         print_err(str(e))
