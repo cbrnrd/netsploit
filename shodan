@@ -40,7 +40,7 @@ def print_msg(msg):
     print bcolors.OKBLUE + bcolors.BOLD + "[*] " + bcolors.ENDC + msg
 
 def print_err(msg):
-    print bcolors.FAIL + bcolors.BOLD + "[!] " + bcolors.ENDC + msg
+    print bcolors.FAIL + bcolors.BOLD + "[!] " + bcolors.ENDC + str(msg)
 
 def print_good(msg):
     print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
@@ -198,6 +198,7 @@ def main():
   facets         gets top ports, services, companies, etc.
   myip           get your external IP
   help           print this help message
+  exec           execute command line commands
   exit           exit shodan-cli
                 """
             elif user_in == '':
@@ -209,7 +210,7 @@ def main():
                 myip()
             elif cmds[6] in user_in:
                 inarr = user_in.split(' ')
-                call(inarr)  # This doesn't really need its own function, as it's only used once
+                call(inarr[1:])  # This doesn't really need its own function, as it's only used once
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
