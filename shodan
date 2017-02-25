@@ -2,6 +2,7 @@
 # coding=utf-8
 import sys
 import re
+from subprocess import call
 try:
     import shodan
 except ImportError:
@@ -26,7 +27,7 @@ class bcolors:
     UL       =  '\033[4m'
 
 # predefine commands
-cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'account']
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -68,7 +69,7 @@ def search_host(hostname, outfile=False, filename=''):
     if outfile:
         print_msg("Outputting results to: %s" % filename)
     else:
-        print_mssg("Outputting results to STDOUT")
+        print_msg("Outputting results to STDOUT")
     host = api.host(hostname)
     if outfile:
         with open(filename, 'w') as outf:
@@ -124,6 +125,9 @@ def facet_search(query, num):
         # Print an empty line between summary info
         print ''
 
+def get_account_info():
+    return call(['shodan '])
+
 def main():
     ban = banner()
     print ban
@@ -138,7 +142,7 @@ def main():
             # the standard input, but bugs WILL occur if it's
             # not formatted correctly
 
-            if cmds[0] in user_in and not "_host" in user_in):  # search
+            if cmds[0] in user_in and not "_host" in user_in:  # search
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print "\'search\' usage: search <query> [output_file]"
@@ -177,11 +181,15 @@ def main():
   search         basic shodan search
   search_host    search shodan for a given host
   facets         get facet data from shodan (top ports, services, etc.)
+  myip           get your external IP
   help           print this help message
   exit           exit shodan-cli
                 """
             elif user_in == '':
                 pass
+            elif user_in == "clear":
+                print_msg("exec: clear")
+                call(["clear"])
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
