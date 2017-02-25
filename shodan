@@ -138,7 +138,7 @@ def main():
             # the standard input, but bugs WILL occur if it's
             # not formatted correctly
 
-            if cmds[0] in user_in and not user_in.contains("_host"):  # search
+            if cmds[0] in user_in and not "_host" in user_in):  # search
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print "\'search\' usage: search <query> [output_file]"
