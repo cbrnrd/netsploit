@@ -36,8 +36,9 @@ def spinning_cursor():
 class AnimThread(threading.Thread):
     def run(self):
         spinner = spinning_cursor()
+        sys.stdout.write("Starting netsploit ")
         for _ in range(50):
-            sys.stdout.write("Starting netsploit" + spinner.next())
+            sys.stdout.write(spinner.next())
             sys.stdout.flush()
             sleep(0.2)
             sys.stdout.write('\b')
