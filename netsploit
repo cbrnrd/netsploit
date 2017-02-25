@@ -70,7 +70,7 @@ def print_good(msg):
 def banner():
     banner1 =  bcolors.FAIL + bcolors.BOLD + """
                   ____
-                 /  @   \==]|[=(]                  N E T S P L O I T ! !
+                 /  @   \==]|[=(]               N E T S P L O I T ! !
                 |--------|
                 ==========       .  *                                     *
                 ==========     .\ * . *.   *                         .    * \  .
