@@ -1,0 +1,293 @@
+#!/usr/bin/python
+# coding=utf-8
+import sys
+import re
+import os
+import urllib
+import socket
+from subprocess import call
+try:
+    import shodan
+except ImportError:
+    print "You have not installed the shodan module."
+    print "Please install it with the following command: `pip install shodan`"
+    sys.exit(1)
+
+key = ''  # Your API key here
+api = shodan.Shodan(key)
+try:
+    test = api.info()
+except:
+    print "\033[31mInvalid API key\033[0m"
+    sys.exit(0)
+
+class bcolors:
+    HEADER   =  '\033[95m'
+    OKBLUE   =  '\033[34m'
+    OKGREEN  =  '\033[32m'
+    WARNING  =  '\033[93m'
+    FAIL     =  '\033[31m'
+    ENDC     =  '\033[0m'
+    BOLD     =  '\033[1m'
+    TITLE    =  '\033[96m'
+    UL       =  '\033[4m'
+
+# predefine commands
+cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
+'portscan']
+
+# Some basic UI print functions, make it look a bit nicer
+def print_msg(msg):
+    print bcolors.OKBLUE + bcolors.BOLD + "[*] " + bcolors.ENDC + msg
+
+def print_err(msg):
+    print bcolors.FAIL + bcolors.BOLD + "[!] " + bcolors.ENDC + str(msg)
+
+def print_good(msg):
+    print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
+
+
+def banner():
+    return bcolors.FAIL + bcolors.BOLD + """
+                         .-.
+                         '-'
+                        //
+               _..---._/|
+             .' ."     '-.
+            /__/          \      *
+           ====_____     __|     :
+          /#   #\"\"\" |   /()\    :    ..*
+          |#   #    |   \__/    : .''
+          \#___#____|      /   :::.. .
+           \______________|_...‰_: .. '*
+  ()       // /\||||)))))))      '   . .
+ .( \_     \\_\//   _-'.'/        |   * ..
+( )  |^|^|^|ooo/  _#\.//\"\"\"_      |   . . .
+(_)_.'v|v|v|     / \#  \_ / '_  _'    . .
+           | _ _/_/     /'./_-|\"         . .
+           /#_#__\"\"\"-._ /#  \__)       .  .
+           |__   \"\"-._ |##               . . .
+           |  \"\"|-\"\"\"-_/##              . .
+           /\"\"--\__.-|                       .
+           \-_.-<__ /                   .   .
+           /-_| /  \
+           \-_| \_-<.                        .  .
+           <_-/ <_.-\                    .
+           <_-|  |_.-|                        .
+      .----|   \__\  |                 .
+     |     .\"\"\"   '.  |                       .
+      .___|        |__|  The network seems good, time to prove you wrong.
+          '.__...\"\"\"
+
+{}By thecarterb <0xCB[at]protonmail.com>""".format(bcolors.ENDC)
+
+def search(content, outfile=False, filename=''):
+    print_msg("Searching for {}".format(content))
+    if outfile:
+        print_msg("Outputting to \'{}\'".format(filename))
+    else:
+        print_msg("Printing to STDOUT")
+    results = api.search(content)  # Search shodan
+    if outfile:
+        with open(filename, 'w') as outf:
+            for result in results['matches']:
+                outf.write(result['ip_str'] + "\n")
+    else:
+        for result in results['matches']:
+            print_good(result['ip_str'])
+
+def search_host(hostname, outfile=False, filename=''):
+    if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
+        hstip = socket.gethostbyname(hostname)
+        print_msg("Searching shodan for {}({})...".format(hstip, hostname))
+        host = api.host(hstip)
+    else:
+        print_msg("Searching for {}".format(hostname))
+        host = api.host(hostname)
+    if outfile:
+        print_msg("Outputting results to: %s" % filename)
+    else:
+        print_msg("Outputting results to STDOUT")
+
+    if outfile:
+        with open(filename, 'w') as outf:
+            outf.write("IP: %s\n" % host['ip_str'])
+            outf.write("Organization: %s\n" % host.get('org', 'n/a'))
+            outf.write("Operating System: %s\n" % host.get('os', 'n/a'))
+            for item in host['data']:
+                outf.write("Port: %s\n" % item['port'])
+                outf.write("Banner: %s\n" % item['data'])
+
+    # print general information about host
+    print_good("IP: %s" % host['ip_str'])
+    print_good("Organization: %s" % host.get('org', 'n/a'))
+    print_good("Operating System: %s" % host.get('os', 'n/a'))
+
+    for item in host['data']:
+        print """
+                Port: %s
+                Banner: %s
+        """ % (item['port'], item['data'])
+
+def facet_search(query, num):
+    FACETS = [
+        'org',
+        'domain',
+        'port',
+        'asn',
+
+        ('country', num),
+]
+
+    FACET_TITLES = {
+        'org': 'Top {} Organizations'.format(num),
+        'domain': 'Top {} Domains'.format(num),
+        'port': 'Top {} Ports'.format(num),
+        'asn': 'Top {} Autonomous Systems'.format(num),
+        'country': 'Top {} Countries'.format(num),
+    }
+    print_msg("Searching for facets (top {} results)".format(num))
+    result = api.count(query, facets=FACETS)
+
+    print 'Shodan Summary Information'
+    print 'Query: %s' % query
+    print 'Total Results: %s\n' % result['total']
+
+    # Print the summary info from the facets
+    for facet in result['facets']:
+        print FACET_TITLES[facet].replace()
+
+        for term in result['facets'][facet]:
+            print '%s: %s' % (term['value'], term['count'])
+
+        # Print an empty line between summary info
+        print ''
+
+def myip():
+    f = urllib.urlopen("http://www.canyouseeme.org/")
+    html_doc = f.read()
+    f.close()
+    m = re.search('(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)',html_doc)
+    print_good("Your IP is %s" % m.group(0))
+
+def portscan(host, mini, maxi):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    open_ports = 0
+    for port in range(mini, maxi):
+        result = s.connect_ex((host, port))
+        if result == 0:
+            print_good("Open port: {}".format(port))
+            open_ports += 1
+    print_msg("{} has {} open ports.".format(host, open_ports))
+
+
+def main():
+    ban = banner()
+    print ban
+    while True:
+        try:
+            user_in = raw_input(bcolors.UL + "nsploit{} > ".format(bcolors.ENDC))
+
+
+            # NOTE: input validation needs to be fixed. right now
+            # if "search" and "facets" are in the same input
+            # line, it doesnt know what to do. It's assuming
+            # the standard input, but bugs WILL occur if it's
+            # not formatted correctly
+
+            if cmds[0] in user_in and not "_host" in user_in:  # search
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print "\'search\' usage: search <query> [output_file]"
+                elif len(inarr) == 2:
+                    search(inarr[1])
+                elif len(inarr) == 3:
+                    search(inarr[1], True, inarr[2])
+
+            elif cmds[1] in user_in:  # exit
+                print_err("Exiting.")
+                sys.exit(0)
+
+            elif cmds[2] in user_in:  # search_host
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print_msg("\'search_host\' usage: search_host <hostname> [outfilename]")
+                elif len(inarr) == 2:
+                    search_host(inarr[1])
+                elif len(inarr) == 3:
+                    search_host(inarr[1], True, inarr[2])
+
+            elif cmds[3] in user_in: # facets
+                inarr = user_in.split(' ')
+                if len(inarr) == 1:
+                    print_msg("\'facets\' usage: facets \"<search query>\" <number of countries>")
+                elif len(inarr) == 2:
+                    print_msg("Missing country number")
+                elif len(inarr) == 3:
+                    facet_search(inarr[1:], inarr[len(inarr) - 1])  # TODO test this
+
+            elif user_in == cmds[4]: # help, TODO: update facets() to original
+                print """
+Shodan commands:
+
+  Command         Meaning
+ ---------       ---------
+
+  banner         print starting banner
+  search         basic shodan search
+  search_host    search shodan for a given host
+  facets         gets top ports, services, companies, etc.
+  myip           get your external IP
+
+Networking commands:
+  Command         Meaning
+ ---------       ---------
+ resolve         resolve the ip of a given hostname
+
+Misc commands:
+  Command         Meaning
+ ---------       ---------
+  help           print this help message
+  exec           execute command line commands
+  exit           exit shodan-cli
+                """
+            elif user_in == '':
+                pass
+            elif user_in == "clear":
+                print_msg("exec: clear")
+                call(["clear"])
+            elif user_in == cmds[5]:
+                myip()
+            elif cmds[6] in user_in:
+                inarr = user_in.split(' ')
+                call(inarr[1:])  # This doesn't really need its own function, as it's only used once
+            elif user_in == cmds[7]:
+                print ban
+            elif cmds[8] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print "\'resolve\' usage: resolve <domain>"
+                try:
+                    print_good("{} is {}".format(inarr[1], socket.gethostbyname(inarr[1])))
+                except Exception:
+                    print_err("Could not resolve {}".format(inarr[1]))
+            elif cmds[9] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print "\'portscan\' usage: portscan <ip> <min port> <max port>"
+                else:
+                    portscan(inarr[2], inarr[3], inarr[4])
+            else:
+                print_err("Unknown command: {}".format(user_in))
+        except Exception as e:
+            print_err(e)
+            pass
+        except KeyboardInterrupt:
+            print "\n"
+            print_msg("Use \"exit\" to exit the program")
+            pass
+
+
+
+if __name__ == "__main__":
+    main()
