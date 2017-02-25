@@ -358,7 +358,7 @@ def main():
     while True:
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
-
+            user_in = user_in.strip()
 
             # BUG: input validation needs to be fixed. right now
             # if "search" and "facets" are in the same input
