@@ -236,7 +236,6 @@ def search_host(hostname, outfile=False, filename=''):
         """ % (item['port'], item['data'])
 
 def facet_search(query):
-    try:
     # The list of properties we want summary information on
     FACETS = [
         'org',
@@ -259,10 +258,7 @@ def facet_search(query):
     }
 
     try:
-        # Setup the api
-        api = shodan.Shodan(API_KEY)
-
-        # Generate a query string out of the command-line arguments
+        # Generate a query string out of the params
         query = ' '.join(query)
 
         # Use the count() method because it doesn't return results and doesn't require a paid API plan
@@ -282,6 +278,8 @@ def facet_search(query):
 
             # Print an empty line between summary info
             print ''
+    except Exception as e:
+        print_err("Error: {}".format(str(e)))
 
 
 def myip():
