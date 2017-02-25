@@ -78,7 +78,7 @@ def banner():
       .___|        |__|  The network seems good, time to prove you wrong.
           '.__...\"\"\"
 
- {}By thecarterb <0xCB[at]protonmail.com>""".format(bcolors.ENDC)
+{}By thecarterb <0xCB[at]protonmail.com>""".format(bcolors.ENDC)
 
 def search(content, outfile=False, filename=''):
     print_msg("Searching for {}".format(content))
@@ -253,7 +253,12 @@ Misc commands:
                 print ban
             elif cmds[8] in user_in:
                 inarr = user_in.split(' ')
-                socket.gethostbyname(inarr[1])
+                if len(inarr) < 2:
+                    print "\'resolve\' usage: resolve <domain>"
+                try:
+                    print_good("{} is {}".format(inarr[1], socket.gethostbyname(inarr[1]))
+                except Exception:
+                    print_err("Could not resolve {}".format(inarr[1]))
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
