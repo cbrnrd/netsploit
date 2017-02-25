@@ -51,7 +51,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d']
+'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -296,6 +296,13 @@ def hb_test(target, outfile=False, filename=''):
         print_msg("Outputting to {}".format(filename))
         call(['python', 'tools/heartbleed/hb-test.py', '-f', filename, target])
 
+def getbots(host):
+    try:
+        r = urllib.urlopen(host + "/robots.txt")
+        print r.read()
+    except:
+        print_err("{} doesnt have a robots.txt file".format(host))
+
 
 
 #####################
@@ -457,6 +464,14 @@ Misc commands:
                 new = 2
                 url = "https://simple.shodan.io/"
                 webbrowser.open(url, new=new)
+            elif cmds[15] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'robots\' usage: robots <host>")
+                elif len(inarr) == 2:
+                    getbots(inarr[1])
+                else:
+                    pass
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
