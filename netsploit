@@ -252,7 +252,7 @@ def portscan(host, mini, maxi):
             open_ports += 1
     print_msg("{} has {} open ports.".format(host, open_ports))
 
-def slowloris(tgt, port=80):
+def slowloris(tgt, port='80'):
     print_msg("Attacking {} on port {}".format(tgt, port))
     call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
 
@@ -363,7 +363,7 @@ Misc commands:
                 if len(inarr) < 2 and not len(inarr) > 4:
                     print_msg("\'slowloris\' usage: slowloris <target IP> [port (default: 80)]")
                 elif len(inarr) == 3:
-                    slowloris(inarr[1], int(inarr[2]))
+                    slowloris(inarr[1], inarr[2])
                 else:
                     slowloris(inarr[1])
             else:
