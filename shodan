@@ -72,7 +72,7 @@ def search(content, outfile=False, filename=''):
 
 def search_host(hostname, outfile=False, filename=''):
     if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
-        hstip = hostname.gethostname()
+        hstip = hostname.gethostbyname()
     print_msg("Searching shodan for {}({})...".format(hstip, hostname))
     if outfile:
         print_msg("Outputting results to: %s" % filename)
