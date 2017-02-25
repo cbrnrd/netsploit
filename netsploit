@@ -13,11 +13,18 @@ except ImportError:
     print "Please install it with the following command: `pip install shodan`"
     sys.exit(1)
 
-key = ''  # Your API key here
+try:
+    with open('.api_key', 'r') as f:
+        firstline = f.readline()
+    f.close()
+except:
+    print "Couldn't locate api key, running setup.sh"
+    call(['bash', 'setup.sh'])
+key = firstline.strip()
 api = shodan.Shodan(key)
 try:
     test = api.info()
-except:
+except shodan.APIException:
     print "\033[31mInvalid API key\033[0m"
     sys.exit(0)
 
@@ -49,6 +56,7 @@ def print_good(msg):
 
 def banner():
     return bcolors.FAIL + bcolors.BOLD + """
+			   NETSPLOIT
                          .-.
                          '-'
                         //
@@ -63,7 +71,7 @@ def banner():
   ()       // /\||||)))))))      '   . .
  .( \_     \\_\//   _-'.'/        |   * ..
 ( )  |^|^|^|ooo/  _#\.//\"\"\"_      |   . . .
-(_)_.'v|v|v|     / \#  \_ / '_  _'    . .
+(_)_.\'v|v|v|     / \#  \_ / \'_  _\'    . .
            | _ _/_/     /'./_-|\"         . .
            /#_#__\"\"\"-._ /#  \__)       .  .
            |__   \"\"-._ |##               . . .
