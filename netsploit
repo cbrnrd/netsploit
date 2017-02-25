@@ -37,10 +37,10 @@ class AnimThread(threading.Thread):
     def run(self):
         spinner = spinning_cursor()
         sys.stdout.write("Starting netsploit ")
-        for _ in range(50):
+        for _ in range(20):
             sys.stdout.write(spinner.next())
             sys.stdout.flush()
-            sleep(0.2)
+            sleep(0.25)
             sys.stdout.write('\b')
     #def stop(self):
 #        sleep(10000000000)  # since you cant stop threads in python ¯\_(ツ)_/¯
@@ -310,6 +310,7 @@ def hb_test(target, outfile=False, filename=''):
     if not outfile:
         call(['python', 'tools/heartbleed/hb-test.py', target])
     else:
+        print_msg("Outputting to {}".format(filename))
         call(['python', 'tools/heartbleed/hb-test.py', '-f', filename, target])
 
 
