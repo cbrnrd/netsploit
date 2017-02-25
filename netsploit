@@ -5,6 +5,7 @@ import re
 import os
 import urllib
 import socket
+import threading
 from time import sleep
 from random import randint
 from subprocess import call
@@ -25,14 +26,31 @@ try:
 except:
     print "Couldn't locate api key, running setup.sh"
     call(['bash', 'setup.sh'])
+
 key = firstline.strip()
+
+def spinning_cursor():
+    while True:
+        for cursor in '|/-\\':
+            yield cursor
+def startup_anim():
+    spinner = spinning_cursor()
+    for _ in range(50):
+    sys.stdout.write("Starting netsploit" + spinner.next())
+    sys.stdout.flush()
+    time.sleep(0.2)
+    sys.stdout.write('\b')
+
+t = Threading.thread(target=startup_anim)
+t.setDaemon(True)
+t.start()
 api = shodan.Shodan(key)
 try:
     test = api.info()
 except:
     print "\033[31mInvalid API key\033[0m"
     sys.exit(0)
-
+t.stop()
 class bcolors:
     HEADER   =  '\033[95m'
     OKBLUE   =  '\033[34m'
@@ -46,7 +64,7 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris', 'ssl', 'mailsniff']
+'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -157,6 +175,13 @@ def banner():
     else:
         return banner4
 
+
+#####################
+#                   #
+#   These handle    #
+#   the commands    #
+#                   #
+#####################
 def search(content, outfile=False, filename=''):
     print_msg("Searching for {}".format(content))
     if outfile:
@@ -277,13 +302,27 @@ def mailsniff(interface, time):
         print_err("Stopping sniff...")
         sleep(1)
 
-# From here on out, this is ALL prompt input handling
+def hb_test(target, outfile=False, filename=''):
+    if not outfile:
+        call(['python', 'tools/heartbleed/hb-test.py', target])
+    else:
+        call(['python', 'tools/heartbleed/hb-test.py', '-f', filename, target])
+
+
+
+#####################
+#                   #
+#   This handles    #
+#   the prompt      #
+#                   #
+#####################
+
 def main():
     ban = banner()
     print ban
     while True:
         try:
-            user_in = raw_input(bcolors.UL + "nsploit{} > ".format(bcolors.ENDC))  # prompt
+            user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
 
 
             # BUG: input validation needs to be fixed. right now
@@ -344,6 +383,7 @@ Networking commands:
   slowloris      do a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
   mailsniff      sniff the local network for email credentials
+  heartbleed     determine if a server is vulnerable to heartbleed
 
 
 Misc commands:
@@ -416,6 +456,14 @@ Misc commands:
                     print_msg("\'mailsniff\' usage: mailsniff <interface> <time>")
                 else:
                     mailsniff(inarr[1], inarr[2])
+            elif cmds[13] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'heartbleed\' usage: heartbleed <target ip> [memdumpfile])
+                elif len(inarr) == 2:
+                    hb_test(inarr[1])
+                else:
+                    hb_test(inarr[1], True, inarr[2])
 
             else:
                 print_err("Unknown command: {}".format(user_in))
