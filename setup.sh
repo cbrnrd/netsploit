@@ -40,8 +40,8 @@ git clone https://github.com/jedisct1/blacknurse > /dev/null
 cd blacknurse
 make
 cd ..
-wget http://pastebin.com/raw/ZAjH7cmG
-mv ZAjH7cmG cf-resolve.py
+http://pastebin.com/raw/kGQ6qquB
+mv kGQ6qquB cf-resolve.py
 
 if [$os == "Darwin"]; then
   echo -e "Installing zmap"
