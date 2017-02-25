@@ -259,8 +259,8 @@ def portscan(host, mini, maxi):
 def slowloris(tgt, port='80'):
     print_msg("Attacking {} on port {}".format(tgt, port))
     call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
-    
-def ssl(target, outfile, filename=''):
+
+def ssl(target, outfile=False, filename=''):
     if not outfile:
         print_msg("Analyzing {}".format(target))
         print_msg("Printing to STDOUT")
@@ -343,6 +343,7 @@ Networking commands:
   myip           get your external IP
   slowloris      do a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
+  mailsniff      sniff the local network for email credentials
 
 
 Misc commands:
