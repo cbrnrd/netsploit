@@ -306,17 +306,19 @@ def getbots(host):
         print_err("{} doesnt have a robots.txt file".format(host))
 
 def honey(ip):
-    score = api.labs.honeyscore(ip)
-    if score == 1.0:
-        print_good("{} is a honeypot!".format(ip))
-    elif score > 0.5:
-        print "{}[-]{}{ } is probably a honeypot.".format(bcolors.WARN, bcolors.ENDC, ip)
-    elif score < 0.5 and score is not 0.0:
-        pring_msg("{} is probably not a honeypot.".format(ip))
-    else:
-        print_err("{} is not a honeypot.".format(ip))
-    print_msg("{} honeyscore: {}".format(ip, score))
-
+    try:
+        score = api.labs.honeyscore(ip)
+        if score == 1.0:
+            print_good("{} is a honeypot!".format(ip))
+        elif score > 0.5:
+            print "{}[-]{}{ } is probably a honeypot.".format(bcolors.WARN, bcolors.ENDC, ip)
+        elif score < 0.5 and score is not 0.0:
+            pring_msg("{} is probably not a honeypot.".format(ip))
+        else:
+            print_err("{} is not a honeypot.".format(ip))
+        print_msg("{} honeyscore: {}".format(ip, score))
+    except:
+        print_err("Could not determine honeyscore.")
 
 
 #####################
@@ -488,6 +490,12 @@ Misc commands:
                     getbots(inarr[1])
                 else:
                     pass
+            elif cmds[16] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'honeyscore\' usage: honeyscore <ip>")
+                else:
+                    honey(inarr[1])
             else:
                 print_err("Unknown command: {}".format(user_in))
         except Exception as e:
