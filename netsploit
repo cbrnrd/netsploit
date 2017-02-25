@@ -41,6 +41,8 @@ class AnimThread(threading.Thread):
             sys.stdout.flush()
             sleep(0.2)
             sys.stdout.write('\b')
+    def stop(self):
+        self._stop.set()
 
 t = AnimThread()
 t.daemon = True
