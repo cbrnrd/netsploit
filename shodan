@@ -16,7 +16,8 @@ api = shodan.Shodan(key)
 try:
     test = api.info()
 except:
-    print "\033[93m Invalid API key\033[0m"
+    print "\033[31m Invalid API key\033[0m"
+    sys.exit(0)
 
 class bcolors:
     HEADER   =  '\033[95m'
