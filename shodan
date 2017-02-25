@@ -256,7 +256,7 @@ Misc commands:
                 if len(inarr) < 2:
                     print "\'resolve\' usage: resolve <domain>"
                 try:
-                    print_good("{} is {}".format(inarr[1], socket.gethostbyname(inarr[1]))
+                    print_good("{} is {}".format(inarr[1], socket.gethostbyname(inarr[1])))
                 except Exception:
                     print_err("Could not resolve {}".format(inarr[1]))
             else:
