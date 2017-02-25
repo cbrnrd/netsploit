@@ -42,7 +42,7 @@ class AnimThread(threading.Thread):
             sleep(0.2)
             sys.stdout.write('\b')
     def stop(self):
-        self._stop.set()
+        sleep(10000000000)  # since you cant stop threads in python ¯\_(ツ)_/¯
 
 t = AnimThread()
 t.daemon = True
