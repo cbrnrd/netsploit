@@ -357,6 +357,9 @@ def main():
     print ban
     import readline
     import rlcompleter
+
+    for i in range(0, len(cmds)):
+        rlcompleter.Complete(cmds[i])
     if 'libedit' in readline.__doc__:
         readline.parse_and_bind("bind ^I rl_complete")
     else:
