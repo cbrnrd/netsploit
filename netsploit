@@ -6,18 +6,12 @@ import os
 import sys
 import urllib
 import socket
-import readline
+import shodan
 import threading
 from time import sleep
 from random import randint
 from subprocess import call
-from contextlib import closing
-try:
-    import shodan
-except ImportError:
-    print "You have not installed the shodan module."
-    print "Please install it with the following command: `pip install shodan`"
-    sys.exit(1)
+
 
 if not os.path.isdir(os.getcwd() + '/tools'):
     call(['bash', 'setup.sh'])
@@ -361,6 +355,7 @@ def protocols():
 def main():
     ban = banner()
     print ban
+    import readline
     while True:
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
