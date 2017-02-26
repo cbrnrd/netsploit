@@ -48,7 +48,7 @@ class bcolors:
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -352,6 +352,16 @@ def subbrute(host, outfile=False, filename=''):
     else:
         print_msg("Enumerating {} subdomains (Outputting results to text file)".format(host))
         call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v', '-o', filename])
+
+def dump(outfile=False, filename=''):
+    try:
+        if not outfile:
+            call(['tcpdump'])
+        else:
+            call(['tcpdump', '-w', filename])
+    except KeyboardInterrupt:
+        return
+        
 #####################
 #                   #
 #   This handles    #
@@ -438,6 +448,7 @@ Networking commands:
   slowloris      perform a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
   subbrute       use Sublist3r to enumerate dubsomeins of a given domain
+  tcpstream      output the tcp stream of the network
 
 
 Misc commands:
@@ -573,6 +584,17 @@ Misc commands:
                     subbrute(inarr[1])
                 elif len(inarr) == 3:
                     subbrute(inarr[1], True, inarr[2 ])
+            elif cmds[24] in user_in:
+                inarr = user_in.split(' ')
+                else len(inarr) == 1:
+                    print_msg("Outputting to STDOUT")
+                    print_msg("This will produce a lot of data. Outputting to a file is recommended")
+                    sleep(3)
+                    dump()
+                else:
+                    print_msg("Outputting to {}".format(inarr[1]))
+                    dump(True, inarr[1])
+
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
