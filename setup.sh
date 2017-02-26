@@ -3,7 +3,7 @@
 # As of now, this script only works on Debian and OSX, but that's
 # just because of the package managers installing zmap
 
-os=uname
+os=`uname`
 echo -e "Detected $os"
 echo -e "Installing shodan"
 pip install shodan > /dev/null 2>&1
@@ -34,7 +34,7 @@ cd mail0wner
 bash install.sh > /dev/null 2>&1
 cd ..
 git clone https://github.com/thecarterb/hb-test-copy heartbleed > /dev/null 2>&1
-cd ..
+
 #blacknurse router attack
 git clone https://github.com/jedisct1/blacknurse > /dev/null 2>&1
 cd blacknurse
