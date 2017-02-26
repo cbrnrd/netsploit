@@ -40,6 +40,10 @@ git clone https://github.com/jedisct1/blacknurse > /dev/null 2>&1
 cd blacknurse
 make
 cd ..
+git clone https://github.com/aboul3la/Sublist3r
+cd Sublist3r
+pip install -r requirements.txt > /dev/null 2>&1
+cd ..
 wget http://pastebin.com/raw/kGQ6qquB
 mv kGQ6qquB cf-resolve.py
 

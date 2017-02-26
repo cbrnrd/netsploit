@@ -48,7 +48,7 @@ class bcolors:
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve', 'history']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -345,6 +345,13 @@ def protocols():
     except shodan.APIError as e:
         print_err(str(e))
 
+def subbrute(host, outfile=False):
+    if not outfile:
+        print_msg("Enumerating {} subdomains".format(host))
+        call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v'])
+    else:
+        print_msg("Enumerating {} subdomains (Outputting results to text file)".format(host))
+        call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v', '-o'])
 #####################
 #                   #
 #   This handles    #
@@ -362,8 +369,9 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
-            history += str(ite) + " " + user_in + "\n"
-            ite += 1
+            if not user_input == '':
+                history += str(ite) + " " + user_in + "\n"
+                ite += 1
 
             # BUG: input validation needs to be fixed. right now
             # if "search" and "facets" are in the same input
@@ -429,6 +437,7 @@ Networking commands:
   resolve        resolve the ip of a given hostname
   slowloris      perform a slowloris attack on a target(IP)
   ssl            do a scan of the targets SSL configuration
+  subbrute       use Sublist3r to enumerate dubsomeins of a given domain
 
 
 Misc commands:
@@ -556,6 +565,14 @@ Misc commands:
                     pass
             elif user_in == "history":
                 print history
+            elif cmds[23] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) < 2:
+                    print_msg("\'subbrute\' usage: subbrute <domain> [true (for file output)]")
+                elif len(inarr) == 2:
+                    subbrute(inarr[1])
+                elif len(inarr) == 3:
+                    subbrute(inarr[1], True)
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
