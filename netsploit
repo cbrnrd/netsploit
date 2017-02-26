@@ -369,7 +369,7 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
-            if not user_input == '':
+            if not user_in == '':
                 history += str(ite) + " " + user_in + "\n"
                 ite += 1
 
