@@ -6,8 +6,8 @@ import os
 import sys
 import urllib
 import socket
+import readline
 import threading
-import webbrowser
 from time import sleep
 from random import randint
 from subprocess import call
