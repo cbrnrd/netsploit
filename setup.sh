@@ -20,7 +20,7 @@ cd ..
 
 # c4 auto-execution script
 echo "#!/bin/bash"                                      >> c4.sh
-echo "os=uname"                                         >> c4.sh
+echo "os=\`uname\`"                                         >> c4.sh
 echo "if [ \$os == \"Darwin\" ]; then"                     >> c4.sh
 echo "  open \$(curl -Ls git.io/c4 | gshuf | head -n1)"  >> c4.sh
 echo "else"                                             >> c4.sh
