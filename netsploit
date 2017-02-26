@@ -361,7 +361,7 @@ def dump(outfile=False, filename=''):
             call(['tcpdump', '-w', filename])
     except KeyboardInterrupt:
         return
-        
+
 #####################
 #                   #
 #   This handles    #
@@ -586,7 +586,7 @@ Misc commands:
                     subbrute(inarr[1], True, inarr[2 ])
             elif cmds[24] in user_in:
                 inarr = user_in.split(' ')
-                else len(inarr) == 1:
+                if len(inarr) == 1:
                     print_msg("Outputting to STDOUT")
                     print_msg("This will produce a lot of data. Outputting to a file is recommended")
                     sleep(3)
