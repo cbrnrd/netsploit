@@ -397,10 +397,8 @@ def main():
             elif cmds[3] in user_in: # facets
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
-                    print_msg("\'facets\' usage: facets \"<search query>\" <number of countries>")
-                elif len(inarr) == 2:
-                    print_msg("Missing country number")
-                elif len(inarr) == 3:
+                    print_msg("\'facets\' usage: facets <search query>")
+                else:
                     facet_search(inarr[1:])
 
             elif user_in == cmds[4]: # help
