@@ -356,14 +356,6 @@ def main():
     ban = banner()
     print ban
     import readline
-    import rlcompleter
-
-    for i in range(0, len(cmds)):
-        rlcompleter.Complete(cmds[i])
-    if 'libedit' in readline.__doc__:
-        readline.parse_and_bind("bind ^I rl_complete")
-    else:
-        readline.parse_and_bind("tab: complete")
     while True:
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
