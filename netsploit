@@ -48,7 +48,7 @@ class bcolors:
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history']
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -355,11 +355,13 @@ def protocols():
 def main():
     ban = banner()
     print ban
+    history = ""
     import readline
     while True:
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
+            history.append(user_in + "\n")
 
             # BUG: input validation needs to be fixed. right now
             # if "search" and "facets" are in the same input
@@ -436,6 +438,7 @@ Misc commands:
   exec           execute shell commands
   exit           exit netsploit
   help           print this help message
+  history        show all commands used since runtime
 
                 """
 
@@ -549,7 +552,8 @@ Misc commands:
                     call(['python', 'tools/cf-resolve.py', inarr[1]])
                 else:
                     pass
-
+            elif user_in == "history":
+                print history
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
