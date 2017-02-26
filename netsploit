@@ -345,13 +345,13 @@ def protocols():
     except shodan.APIError as e:
         print_err(str(e))
 
-def subbrute(host, outfile=False):
+def subbrute(host, outfile=False, filename=''):
     if not outfile:
         print_msg("Enumerating {} subdomains".format(host))
         call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v'])
     else:
         print_msg("Enumerating {} subdomains (Outputting results to text file)".format(host))
-        call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v', '-o'])
+        call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v', '-o', filename])
 #####################
 #                   #
 #   This handles    #
@@ -568,11 +568,11 @@ Misc commands:
             elif cmds[23] in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
-                    print_msg("\'subbrute\' usage: subbrute <domain> [true (for file output)]")
+                    print_msg("\'subbrute\' usage: subbrute <domain> [outfilename]")
                 elif len(inarr) == 2:
                     subbrute(inarr[1])
                 elif len(inarr) == 3:
-                    subbrute(inarr[1], True)
+                    subbrute(inarr[1], True, inarr[2 ])
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
