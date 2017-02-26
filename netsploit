@@ -361,7 +361,7 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
-            history.append(user_in + "\n")
+            history += user_in + "\n"
 
             # BUG: input validation needs to be fixed. right now
             # if "search" and "facets" are in the same input
