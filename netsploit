@@ -1,6 +1,24 @@
 #!/usr/bin/python
 # coding=utf-8
 
+'''
+ netsploit - a security research tool with shodan implementation
+ Copyright (C) 2017  Carter Brainerd
+ 
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+'''
+
 import re
 import os
 import sys
@@ -181,6 +199,8 @@ def banner():
 #   the commands    #
 #                   #
 #####################
+
+# Do a basic shodan search
 def search(content, outfile=False, filename=''):
     print_msg("Searching for {}".format(content))
     if outfile:
@@ -196,6 +216,7 @@ def search(content, outfile=False, filename=''):
         for result in results['matches']:
             print_good(result['ip_str'])
 
+# http://bit.ly/2lThKgm
 def search_host(hostname, outfile=False, filename=''):
     if ".com" in hostname or ".org" in hostname or ".net" in hostname or ".io" in hostname:
         hstip = socket.gethostbyname(hostname)
@@ -229,6 +250,7 @@ def search_host(hostname, outfile=False, filename=''):
                 Banner: %s
         """ % (item['port'], item['data'])
 
+# http://bit.ly/2lTq3su
 def facet_search(query):
     # The list of properties we want summary information on
     FACETS = [
@@ -275,7 +297,8 @@ def facet_search(query):
     except Exception as e:
         print_err("Error: {}".format(str(e)))
 
-
+# Doesn't use shodan, but it works well and it's fast
+# the regex here is insane
 def myip():
     f = urllib.urlopen("http://www.canyouseeme.org/")
     html_doc = f.read()
@@ -283,6 +306,7 @@ def myip():
     m = re.search('(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)',html_doc)
     print_good("Your IP is %s" % m.group(0))
 
+# NOTE: I'm pretty sure that this doesn't work
 def portscan(host, mini, maxi):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     open_ports = 0
@@ -297,6 +321,8 @@ def slowloris(tgt, port='80'):
     print_msg("Attacking {} on port {}".format(tgt, port))
     call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
 
+# This function uses sslyze.
+# sslyze should be in the $PATH when setup.sh is run
 def ssl(target, outfile=False, filename=''):
     if not outfile:
         print_msg("Analyzing {}".format(target))
@@ -307,6 +333,8 @@ def ssl(target, outfile=False, filename=''):
         print_msg("Outputting to {}".format(filename))
         call(['sslyze', '--regular', target, ' > ', filename])
 
+# I could use exec() here to read the .py file instead of running
+# another instance of the interpreter, but this works for now
 def mailsniff(interface, time):
     try:
         call(['python', 'tools/mail0wner/mail0wner.py', '-q', '-i', interface, '-t', time])
@@ -379,6 +407,11 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
+            
+            # These 3 lines implement the history command.
+            # It first checks if the input is blank,
+            # Then appends the command number and used command
+            # To the 'history' string
             if not user_in == '':
                 history += str(ite) + " " + user_in + "\n"
                 ite += 1
