@@ -18,7 +18,7 @@ cd slowloris
 python setup.py install > /dev/null 2>&1
 cd ..
 
-# c4 auto-execution script
+# I suppose this is a form of file IO
 echo "#!/bin/bash"                                      >> c4.sh
 echo "os=\`uname\`"                                         >> c4.sh
 echo "if [ \$os == \"Darwin\" ]; then"                     >> c4.sh
@@ -65,7 +65,7 @@ else
   read ans
   if [ $ans == "y" ]; then
     echo "Installing tcpdump"
-    brew install tcpdump > /dev/null 2>&1
+    apt-get install tcpdump -y > /dev/null 2>&1
   fi
 fi
 
