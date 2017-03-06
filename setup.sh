@@ -2,7 +2,14 @@
 
 # As of now, this script only works on Debian and OSX, but that's
 # just because of the package managers installing zmap
-
+echo -n "Netsploit depends on external tools."
+echo -n "Is it okay to install them?(y/n) "
+read ans
+if [ $ans == "n" ]; then
+  exit
+else
+  break
+fi
 os=`uname`
 echo -e "Detected $os"
 echo -e "Installing shodan"
