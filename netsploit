@@ -1,10 +1,10 @@
 #!/usr/bin/python
-# coding=utf-8
+# coding=binary
 
 '''
  netsploit - a security research tool with shodan implementation
  Copyright (C) 2017 Carter Brainerd
- 
+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -19,16 +19,32 @@
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
 
-import re
-import os
-import sys
-import urllib
-import socket
-import shodan
-import threading
-from time import sleep
-from random import randint
-from subprocess import call
+from nsp.core import *
+from util.ip_regex import *
+from modules.shodan import *
+from modules.networking import *
+from modules.misc import *
+
+
+###
+#
+# Here we deal with getting module names
+# We get rid of the extension using replace()
+#
+###
+misc_modules = os.listdir("modules/misc")
+misc_titles = []
+for i in range(len(misc_modules)):
+    misc_titles.append(i.replace(".py", ""))
+net_modules = os.listdir("modules/networking")
+net_titles  = []
+for i in range(len(net_modules)):
+    net_titles.append(i.replace(".py", ""))
+sho_modules = os.listdir("modules/shodan")
+sho_titles   = []
+for i in range(len(sho_modules)):
+    sho_titles.append(i.replace(".py", ""))
+
 
 # Checks for tools directory
 if not os.path.isdir(os.getcwd() + '/tools'):
@@ -41,6 +57,7 @@ try:
         firstline = f.readline()
     f.close()
 except:
+    # Error case in which the keyfile wasn't found
     print "Couldn't locate api key, running setup.sh"
     call(['bash', 'setup.sh'])
 
@@ -55,252 +72,31 @@ try:
 except:
     print "\033[31mInvalid API key\033[0m"
     sys.exit(0)
-call(['clear'])
-class bcolors:
-    HEADER   =  '\033[95m'
-    OKBLUE   =  '\033[34m'
-    OKGREEN  =  '\033[32m'
-    WARNING  =  '\033[93m'
-    FAIL     =  '\033[31m'
-    ENDC     =  '\033[0m'
-    BOLD     =  '\033[1m'
-    TITLE    =  '\033[96m'
-    UL       =  '\033[4m'
+call(['clear'])  # clear the screen
 
-# predefine commands
+# predefined commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']  # NOTE: This is going to be replaced
 
-# Some basic UI print functions, make it look a bit nicer
-def print_msg(msg):
-    print bcolors.OKBLUE + bcolors.BOLD + "[*] " + bcolors.ENDC + msg
+cmds = []
+for _ in range(len(misc_titles)):
+    cmds.append(misc_modules[_])
+for _ in range(len(net_titles)):
+    cmds.append(net_modules[_])
+for _ in range(len(sho_titles)):
+    cmds.append(sho_modules[_])
 
-def print_err(msg):
-    print bcolors.FAIL + bcolors.BOLD + "[!] " + bcolors.ENDC + str(msg)
-
-def print_good(msg):
-    print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
-
-
-def banner():
-    banner1 =  bcolors.FAIL + bcolors.BOLD + """
-                  ____
-                 /  @   \==]|[=(]               N E T S P L O I T ! !
-                |--------|
-                ==========       .  *                                     *
-                ==========     .\ * . *.   *                         .    * \  .
-               ||||||||||||      \ * ./  *    .   * SYN   ACK   SYN      .  \ \\
-              |||||||||| --]%%%%%% .- =--=---=-=-=-=--=-=--=-==-----=-=-=-=-=-=
-              [=========\  ]===========(  *         ACK   SYN   ACK     . /  /
-             [==============|   / *  \    .                          *  *   /  .
-             C| @ @ @ @ @ @ D         *      *                        *
-              |              \           .                          *  *
-            C| @  @ @  @ @ @  D       .
-             |                 \          *                          *
-           C| @  @  @  @  @  @  D
-            |                    \
-          C| @  @  @   @   @   @  D
-           |                       \\
-          |@@@@@@@@@@@@@@@@@@@@@@@@@|
-           -------------------------
-
-\033[0mBy thecarterb <0xCB[at]protonmail.com>
-"""
-
-    banner2 = bcolors.OKBLUE + bcolors.BOLD + """
-                 ____________________________________________________
-                /                                                    \\
-               |    _____________________________________________     |
-               |   |                                             |    |
-               |   |  bash$ ./netsploit                          |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |                                             |    |
-               |   |_____________________________________________|    |
-               |                                                      |
-                \_____________________________________________________/
-                       \_______________________________________/
-                    _______________________________________________
-                 _-'    .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.  --- `-_
-              _-'.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--.  .-.-.`-_
-           _-'.-.-.-. .---.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-`__`. .-.-.-.`-_
-        _-'.-.-.-.-. .-----.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-----. .-.-.-.-.`-_
-     _-'.-.-.-.-.-. .---.-. .-----------------------------. .-.---. .---.-.-.-.`-_
-    :-----------------------------------------------------------------------------:
-    `---._.-----------------------------------------------------------------._.---'
-    """ + bcolors.ENDC
-
-    banner3 = bcolors.OKGREEN + """
-                                NETSPLOIT
-          _                      _______                      _
-       _dMMMb._              .adOOOOOOOOOba.              _,dMMMb_
-      dP'  ~YMMb            dOOOOOOOOOOOOOOOb            aMMP~  `Yb
-      V      ~"Mb          dOOOOOOOOOOOOOOOOOb          dM"~      V
-               `Mb.       dOOOOOOOOOOOOOOOOOOOb       ,dM'
-                `YMb._   |OOOOOOOOOOOOOOOOOOOOO|   _,dMP'
-           __     `YMMM| OP'~"YOOOOOOOOOOOP"~`YO |MMMP'     __
-         ,dMMMb.     ~~' OO     `YOOOOOP'     OO `~~     ,dMMMb.
-      _,dP~  `YMba_      OOb      `OOO'      dOO      _aMMP'  ~Yb._
-     <MMP'     `~YMMa_   YOOo   @  OOO  @   oOOP   _adMP~'      `YMM>
-                  `YMMMM\`OOOo     OOO     oOOO'/MMMMP'
-          ,aa.     `~YMMb `OOOb._,dOOOb._,dOOO'dMMP~'       ,aa.
-        ,dMYYMba._         `OOOOOOOOOOOOOOOOO'          _,adMYYMb.
-       ,MP'   `YMMba._      OOOOOOOOOOOOOOOOO       _,adMMP'   `YM.
-       MP'        ~YMMMba._ YOOOOPVVVVVYOOOOP  _,adMMMMP~       `YM
-       YMb           ~YMMMM\`OOOOI`````IOOOOO'/MMMMP~           dMP
-        `Mb.           `YMMMb`OOOI,,,,,IOOOO'dMMMP'           ,dM'
-          `'                  `OObNNNNNdOO'                   `'
-                                `~OOOOO~'   BLEEG BLERG, ALL YOUR PACKETS ARE BELONG TO US
-    """ + bcolors.ENDC
-
-    banner4 = """\033[033m""
-    ^+xw*\"\"\"^q_  0 p" F  F _F  p^^"___jM   j  F              F
-      _,,__   q x" [  F J_ J  P  w\"\"\"\"_  _,"  9  _m^`"*____x"    _____
- v,,_w"   "M_ @ `, ",_!u_9__L F #  r^""^^"    f j"      "      _*"   "6_
-     _,,__  B 9_ "v,_Zp*\"\"\"\"\"^@u# P _m^"^u,a*"  j   ____       9       ""
-   _F    `4 A_ "*-ap"            ^Lj" _smu,    _* ,-"   9_   _wf
- ^^"__,,_ jL  -- m<                5j! ____*-*^   &       \"\"\"\"     ___
-   p"    9p`^u,av'       {}N E T{}     `,*\"\"\"\"q_   _x" _aa,_        p^\" \"\"u
- ,r  _____!L___,M     {}S P L O I T{}    Lsr--x_"^^`" qP     9      J      `M
-   y^    "_    _J                    L_,,_ ?_    _#       ^v- -^"
-  _F  __,_`^---"jr                  j___ ""y""^^""_,-r-u_
- r^ j!    ?s_, *"jp                g\"\"\"\"^q_b_    _F     "p      j^^""-w
-    L  _,wma_  _x"jN__          __d\"\"\"^c  F  "-^""  _    "c____j'      L
-   j" J"    \"\"\"  _F 99Nu______g**L_""s  4 A,    _P\"\"\"^q_    ""         "-
- m^  j_  _-^""mw^" _' # 9"N""L ^, "s  b #   "--^"      0
-      @ j"   _v-wa+" ," j  #  p  r j qF "q_   _*-wu_   9,     y^`"^w_
-   _,!  0_  f   _m-**" _F _F  L _FjP ?,    "^""    "u    "---^      j
- \"\"\"     # J   j"   p\"\"\"p-^ x^ p" d_   -q__a-mw_    j               `L
-        V  `q  #   f   j   4   b   ^,   __      6_  ?,     _,__       "--
- *`^ww-"     F 9L_ b   1   4   `u_   "-^""*,    jh    ^-xm*"   9z
-            )    0 `+a_ W__ 9,___"^^"+_     L   0                k
-     _x-*v+"     9    0   "b    "_    "p   _0   `&    ___       d_
-
-    {}""".format(bcolors.ENDC, "\033[033m", bcolors.ENDC, "\033[033m", bcolors.ENDC)
-    randnum = randint(1, 4)
-    if randnum == 1:
-        return banner1
-    elif randnum == 2:
-        return banner2
-    elif randnum == 3:
-        return banner3
-    else:
-        return banner4
+print banners()
 
 
-#####################
-#                   #
-#   These handle    #
-#   the commands    #
-#                   #
-#####################
+####
+#
+# These handle the
+# command functions
+#
+####
 
-# Do a basic shodan search
-def search(content, outfile=False, filename=''):
-    print_msg("Searching for {}".format(content))
-    if outfile:
-        print_msg("Outputting to \'{}\'".format(filename))
-    else:
-        print_msg("Printing to STDOUT")
-    results = api.search(content)  # Search shodan
-    if outfile:
-        with open(filename, 'w') as outf:
-            for result in results['matches']:
-                outf.write(result['ip_str'] + "\n")
-    else:
-        for result in results['matches']:
-            print_good(result['ip_str'])
-
-# http://bit.ly/2lThKgm
-def search_host(hostname, outfile=False, filename=''):
-    domains = [".com", ".org", ".net", ".io"] #NOTE: not tested yet, mainly added for syntactic sugar
-    if domains in hostname:
-        hstip = socket.gethostbyname(hostname)
-        print_msg("Searching shodan for {}({})...".format(hstip, hostname))
-        host = api.host(hstip)
-    else:
-        print_msg("Searching for {}".format(hostname))
-        host = api.host(hostname)
-    if outfile:
-        print_msg("Outputting results to: %s" % filename)
-    else:
-        print_msg("Outputting results to STDOUT")
-
-    if outfile:
-        with open(filename, 'w') as outf:
-            outf.write("IP: %s\n" % host['ip_str'])
-            outf.write("Organization: %s\n" % host.get('org', 'n/a'))
-            outf.write("Operating System: %s\n" % host.get('os', 'n/a'))
-            for item in host['data']:
-                outf.write("Port: %s\n" % item['port'])
-                outf.write("Banner: %s\n" % item['data'])
-
-    # print general information about host
-    print_good("IP: %s" % host['ip_str'])
-    print_good("Organization: %s" % host.get('org', 'n/a'))
-    print_good("Operating System: %s" % host.get('os', 'n/a'))
-
-    for item in host['data']:
-        print """
-                Port: %s
-                Banner: %s
-        """ % (item['port'], item['data'])
-
-# http://bit.ly/2lTq3su
-def facet_search(query):
-    # The list of properties we want summary information on
-    FACETS = [
-        'org',
-        'domain',
-        'port',
-        'asn',
-
-        # We only care about the top 5 countries, this is how we let Shodan know to return 5 instead of the
-        # default 10 for a facet. If you want to see more than 10, you could do ('country', 1000) for example
-        # to see the top 1,000 countries for a search query.
-        ('country', 5),
-    ]
-
-    FACET_TITLES = {
-        'org': 'Top 10 Organizations',
-        'domain': 'Top 10 Domains',
-        'port': 'Top 10 Ports',
-        'asn': 'Top 10 Autonomous Systems',
-        'country': 'Top 5 Countries',
-    }
-
-    try:
-        # Generate a query string out of the params
-        query = ' '.join(query)
-
-        # Use the count() method because it doesn't return results and doesn't require a paid API plan
-        # And it also runs faster than doing a search().
-        result = api.count(query, facets=FACETS)
-
-        print 'Shodan Summary Information'
-        print 'Query: %s' % query
-        print 'Total Results: %s\n' % result['total']
-
-        # Print the summary info from the facets
-        for facet in result['facets']:
-            print FACET_TITLES[facet]
-
-            for term in result['facets'][facet]:
-                print '%s: %s' % (term['value'], term['count'])
-
-            # Print an empty line between summary info
-            print ''
-    except Exception as e:
-        print_err("Error: {}".format(str(e)))
 
 # Doesn't use shodan, but it works well and it's fast
 # the regex here is insane I wanted to kms doing it
@@ -308,10 +104,10 @@ def myip():
     f = urllib.urlopen("http://www.canyouseeme.org/")
     html_doc = f.read()
     f.close()
-    m = re.search('(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)',html_doc)
+    m = find_ip(html_doc)
     print_good("Your IP is %s" % m.group(0))
 
-# NOTE: I'm pretty sure that this doesn't work
+# XXX: I'm pretty sure that this doesn't work
 def portscan(host, mini, maxi):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     open_ports = 0
@@ -354,32 +150,7 @@ def hb_test(target, outfile=False, filename=''):
         print_msg("Outputting to {}".format(filename))
         call(['python', 'tools/heartbleed/hb-test.py', '-f', filename, target])
 
-# Uses the shodan api to check if something is a honeypot
-# Honeyscore cam range from 0.0-1.0
-def honey(ip):
-    try:
-        score = api.labs.honeyscore(ip)
-        if score == 1.0:
-            print_good("{} is a honeypot!".format(ip))
-        elif score > 0.5:
-            print "{}[-]{}{ } is probably a honeypot.".format(bcolors.WARN, bcolors.ENDC, ip)
-        elif score <= 0.5 and score != 0.0:
-            print_msg("{} is probably not a honeypot.".format(ip))
-        else:
-            print_err("{} is not a honeypot.".format(ip))
-        print_msg("{} honeyscore: {}".format(ip, score))
-    except Exception as e:
-        print_err("Could not determine honeyscore. ({})".format(e))
 
-# Shows account specifics about what you can filter for
-def protocols():
-    try:
-        prots = api.protocols()
-
-        for name, description in iter(prots.items()):
-            print_msg('{0:<30}'.format(name) + description)
-    except shodan.APIError as e:
-        print_err(str(e))
 
 def subbrute(host, outfile=False, filename=''):
     if not outfile:
@@ -399,12 +170,11 @@ def dump(outfile=False, filename=''):
     except KeyboardInterrupt:
         return
 
-#####################
-#                   #
-#   This handles    #
-#   the prompt      #
-#                   #
-#####################
+####
+#
+# This handles the prompt
+#
+####
 
 def main():
     ban = banner()
@@ -416,7 +186,7 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
-            
+
             # These 3 lines implement the history command.
             # It first checks if the input is blank,
             # Then appends the command number and used command
@@ -431,20 +201,20 @@ def main():
             # the standard input, but bugs WILL occur if it's
             # not formatted correctly
 
-            if cmds[0] in user_in and not "_host" in user_in:  # search
+            if cmds["search"] in user_in and not "_host" in user_in:  # search
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print "\'search\' usage: search <query> [output_file]"
                 elif len(inarr) == 2:
-                    search(inarr[1])
+                    search(api, inarr[1])
                 elif len(inarr) == 3:
-                    search(inarr[1], True, inarr[2])
+                    search(api, inarr[1], True, inarr[2])
 
-            elif cmds[1] in user_in:  # exit
+            elif user_in = cmds["exit"]:  # exit
                 print_err("Exiting.")
                 sys.exit(0)
 
-            elif cmds[2] in user_in:  # search_host
+            elif cmds["search_host"] in user_in:  # search_host
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("\'search_host\' usage: search_host <hostname> [outfilename]")
@@ -453,7 +223,7 @@ def main():
                 elif len(inarr) == 3:
                     search_host(inarr[1], True, inarr[2])
 
-            elif cmds[3] in user_in: # facets
+            elif cmds["facets"] in user_in: # facets
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("\'facets\' usage: facets <search query>")
@@ -466,15 +236,10 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
-  3d             open shodan 3d in your browser
-  facets         gets top ports, services, companies, etc.
-  honeyscore     check if an ip is a honeypot or not (0.0 - 1.0)
-  key            display your shodan API key
-  protocols      show protocols you can scan
-  search         basic shodan search
-  search_host    search shodan for a given host
-
-
+"""
+                for i in range(len(sho_modules)):
+                    # TODO figure out how to format this properly
+                print """
 Networking commands:
 
   Command         Meaning
