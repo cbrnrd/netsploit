@@ -8,14 +8,15 @@ Here is the basic template:
 
 ```python
 # Your imports here (Try to stay away from external modules, but if you really need it I might make an exception)
-import shodan # NOTE: Use this if making a shodan module, you will also need the api as a parameter in run()
-import nsp.core  # This is needed
+import shodan  # NOTE: Use this if making a shodan module, you will also need the api as a parameter in run()
+import nsp.core as core  # This is needed
 
 def module_name(opts):
     # Do stuff here
 
 def help():
     return "Short help message here"
+
 
 
 ```

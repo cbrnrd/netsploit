@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# coding=binary
+# coding=utf-8
 
 '''
  netsploit - a security research tool with shodan implementation
@@ -18,12 +18,18 @@
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 '''
-
-from nsp.core import *
-from util.ip_regex import *
-from modules.shodan import *
-from modules.networking import *
-from modules.misc import *
+import sys
+sys.path.append("nsp")
+sys.path.append("util")
+sys.path.append("modules/misc")
+sys.path.append("modules/networking")
+sys.path.append("modules/shodan")
+import importlib
+from   nsp.core import *
+from   util.ip_regex import *
+import modules.shodan as shodan
+import modules.networking as net
+import modules.misc as misc
 
 
 ###
@@ -33,7 +39,7 @@ from modules.misc import *
 #
 ###
 misc_modules = os.listdir("modules/misc")
-misc_titles = []
+misc_titles  = []
 for i in range(len(misc_modules)):
     misc_titles.append(i.replace(".py", ""))
 net_modules = os.listdir("modules/networking")
@@ -41,7 +47,7 @@ net_titles  = []
 for i in range(len(net_modules)):
     net_titles.append(i.replace(".py", ""))
 sho_modules = os.listdir("modules/shodan")
-sho_titles   = []
+sho_titles  = []
 for i in range(len(sho_modules)):
     sho_titles.append(i.replace(".py", ""))
 
@@ -79,6 +85,7 @@ cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'bann
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
 'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']  # NOTE: This is going to be replaced
 
+'''
 cmds = []
 for _ in range(len(misc_titles)):
     cmds.append(misc_modules[_])
@@ -86,7 +93,7 @@ for _ in range(len(net_titles)):
     cmds.append(net_modules[_])
 for _ in range(len(sho_titles)):
     cmds.append(sho_modules[_])
-
+'''
 print banners()
 
 
@@ -204,13 +211,13 @@ def main():
             if cmds["search"] in user_in and not "_host" in user_in:  # search
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
-                    print "\'search\' usage: search <query> [output_file]"
+                    print shodan.search.help()
                 elif len(inarr) == 2:
-                    search(api, inarr[1])
+                    shodan.search.search(api, inarr[1])
                 elif len(inarr) == 3:
-                    search(api, inarr[1], True, inarr[2])
+                    shodan.search.search(api, inarr[1], True, inarr[2])
 
-            elif user_in = cmds["exit"]:  # exit
+            elif user_in == cmds["exit"]:  # exit
                 print_err("Exiting.")
                 sys.exit(0)
 
@@ -236,8 +243,8 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
-"""
-                for i in range(len(sho_modules)):
+                """
+                #for i in range(len(sho_modules)):
                     # TODO figure out how to format this properly
                 print """
 Networking commands:
