@@ -4,7 +4,7 @@
 '''
  netsploit - a security research tool with shodan implementation
  Copyright (C) 2017 Carter Brainerd
- 
+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
@@ -342,7 +342,7 @@ def ssl(target, outfile=False, filename=''):
 # another instance of the interpreter, but this works for now
 def mailsniff(interface, time):
     try:
-        call(['python', 'tools/mail0wner/mail0wner.py', '-q', '-i', interface, '-t', time])
+        call(['sudo', 'python', 'tools/mail0wner/mail0wner.py', '-q', '-i', interface, '-t', time])
     except KeyboardInterrupt:
         print_err("Stopping sniff...")
         sleep(1)
@@ -416,7 +416,7 @@ def main():
         try:
             user_in = raw_input(bcolors.UL + "netsploit{} > ".format(bcolors.ENDC))  # prompt
             user_in = user_in.strip()
-            
+
             # These 3 lines implement the history command.
             # It first checks if the input is blank,
             # Then appends the command number and used command
@@ -466,44 +466,44 @@ Shodan commands:
 
   Command         Meaning
  ---------       ---------
-  3d             open shodan 3d in your browser
-  facets         gets top ports, services, companies, etc.
-  honeyscore     check if an ip is a honeypot or not (0.0 - 1.0)
-  key            display your shodan API key
-  protocols      show protocols you can scan
-  search         basic shodan search
-  search_host    search shodan for a given host
+  3d             Open shodan 3d in your browser
+  facets         Gets top ports, services, companies, etc.
+  honeyscore     Check if an ip is a honeypot or not (0.0 - 1.0)
+  key            Display your shodan API key
+  protocols      Show protocols you can scan
+  search         Basic shodan search
+  search_host    Search shodan for a given host
 
 
 Networking commands:
 
   Command         Meaning
  ---------       ---------
-  blacknurse     perform a blacknurse attack on a given ip
-  cam            open a random camera in your web browser
-  cfresolve      attempt to resolve a domain protected by couldflare
-  heartbleed     determine if a server is vulnerable to heartbleed
-  internet       scan the whole internet on a given port (noisy)
-  myip           get your external IP
-  mailsniff      sniff the local network for email credentials
-  resolve        resolve the ip of a given hostname
-  slowloris      perform a slowloris attack on a target(IP)
-  ssl            do a scan of the targets SSL configuration
-  subbrute       use Sublist3r to enumerate dubsomeins of a given domain
-  tcpstream      output the tcp stream of the network
+  blacknurse     Perform a blacknurse attack on a given ip
+  cam            Open a random camera in your web browser
+  cfresolve      Attempt to resolve a domain protected by couldflare
+  heartbleed     Determine if a server is vulnerable to heartbleed
+  internet       Scan the whole internet on a given port (noisy)
+  myip           Get your external IP
+  mailsniff      Sniff the local network for email credentials
+  resolve        Resolve the ip of a given hostname
+  slowloris      Perform a slowloris attack on a target(IP)
+  ssl            Do a scan of the targets SSL configuration
+  subbrute       Use Sublist3r to enumerate subdomains of a given domain
+  tcpstream      Output the tcp stream of the network
 
 
 Misc commands:
 
   Command         Meaning
  ---------       ---------
-  banner         print a starting banner
-  clear          clear the screen
-  exec           execute shell commands
-  exit           exit netsploit
-  help           print this help message
-  history        show all commands used since runtime
-  ?              alias for `help`
+  banner         Print a starting banner
+  clear          Clear the screen
+  exec           Execute shell commands
+  exit           Exit netsploit
+  help           Print this help message
+  history        Show all commands used since runtime
+  ?              Alias for `help`
 
                 """
 
@@ -594,7 +594,7 @@ Misc commands:
                     print_msg("\'internet\' usage: internet <port> [outfilename]")
                 elif len(inarr) == 2:
                     print_msg("Outputting to STDOUT.")
-                    print_msg("[" + bcolors.WARN + "WARNING" + bcolors.ENDC + "]" + "This will produce a lot of data, it is recommended to output to a file.") # fo real
+                    print_msg("[" + bcolors.WARNING + "WARNING" + bcolors.ENDC + "]" + "This will produce a lot of data, it is recommended to output to a file.") # fo real
                     sleep(3)  # Wait for the reader to read the warning
                     call(['zmap', '-p', inarr[1]])  # again, a function isn't really needed
                 elif len(inarr) == 3:
