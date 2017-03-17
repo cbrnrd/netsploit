@@ -197,12 +197,12 @@ def banner():
         return banner4
 
 
-#####################
-#                   #
-#   These handle    #
-#   the commands    #
-#                   #
-#####################
+####
+#                   
+#   These handle    
+#   the commands    
+#                   
+####
 
 # Do a basic shodan search
 def search(content, outfile=False, filename=''):
@@ -399,12 +399,12 @@ def dump(outfile=False, filename=''):
     except KeyboardInterrupt:
         return
 
-#####################
-#                   #
-#   This handles    #
-#   the prompt      #
-#                   #
-#####################
+####
+#                   
+#   This handles    
+#   the prompt      
+#                   
+####
 
 def main():
     ban = banner()
