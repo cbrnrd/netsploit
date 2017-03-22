@@ -22,9 +22,9 @@
 import re
 import os
 import sys
- if (sys.version_info > (3, 0)):
-     print "This program uses python 2.7, NOT python 3"
-     sys.exit(2)
+if (sys.version_info > (3, 0)):
+    print "This program uses python 2.7, NOT python 3"
+    sys.exit(2)
 import urllib
 import socket
 import shodan
