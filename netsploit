@@ -51,6 +51,10 @@ key = firstline.strip()
 # Since the colors are not defined as variables yet
 # we need to use the raw octal code for them
 print "\033[96mStarting netsploit...\033[0m"
+if len(key) < 32:
+ print "\033[93mInvalid API key (too short)\033[0m"
+ key = raw_input("What is your api key? ")
+
 api = shodan.Shodan(key)
 try:
     # Check if API key is valid
