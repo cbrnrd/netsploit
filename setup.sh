@@ -13,14 +13,14 @@ fi
 os=`uname`
 echo -e "Detected $os"
 echo -e "Installing shodan"
-pip install shodan > /dev/null 2>&1
+pip install shodan
 echo -e "Done!"
 mkdir tools
 cd tools
 echo ""
 echo -e "Installing additional tools"
-pip install sslyze > /dev/null 2>&1
-git clone https://github.com/gkbrk/slowloris > /dev/null 2>&1
+pip install sslyze
+git clone https://github.com/gkbrk/slowloris
 cd slowloris
 python setup.py install > /dev/null 2>&1
 cd ..
@@ -36,14 +36,14 @@ echo "fi"                                               >> c4.sh
 chmod +x c4.sh
 
 # include some of my own tools as well
-git clone https://github.com/thecarterb/mail0wner.git > /dev/null 2>&1
+git clone https://github.com/thecarterb/mail0wner.git
 cd mail0wner
 bash install.sh > /dev/null 2>&1
 cd ..
-git clone https://github.com/thecarterb/hb-test-copy heartbleed > /dev/null 2>&1
+git clone https://github.com/thecarterb/hb-test-copy heartbleed
 
 #blacknurse router attack
-git clone https://github.com/jedisct1/blacknurse > /dev/null 2>&1
+git clone https://github.com/jedisct1/blacknurse
 cd blacknurse
 make
 cd ..
@@ -56,23 +56,23 @@ mv kGQ6qquB cf-resolve.py
 
 if [ $os == "Darwin" ]; then
   echo -e "Installing zmap"
-  brew install zmap > /dev/null 2>&1
+  brew install zmap
   echo -e "Installing coreutils"
-  brew install coreutils > /dev/null 2>&1
+  brew install coreutils
   echo -n "Would you like to install tcpdump? (recommended) (y/n) "
   read ans
   if [ $ans == "y" ]; then
     echo "Installing tcpdump"
-    brew install tcpdump > /dev/null 2>&1
+    brew install tcpdump
   fi
 else
   echo -e "Installing zmap"
-  apt-get install -y zmap > /dev/null 2>&1
+  apt-get install -y zmap
   echo -n "Would you like to install tcpdump? (recommended) (y/n) "
   read ans
   if [ $ans == "y" ]; then
     echo "Installing tcpdump"
-    apt-get install tcpdump -y > /dev/null 2>&1
+    apt-get install tcpdump -y
   fi
 fi
 
