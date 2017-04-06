@@ -54,6 +54,10 @@ print "\033[96mStarting netsploit...\033[0m"
 if len(key) < 32:
  print "\033[93mInvalid API key (too short)\033[0m"
  key = raw_input("What is your api key? ")
+ os.remove(".api_key")
+ with open(".api_key", 'w') as f:
+    f.write(key)
+ f.close()
 
 api = shodan.Shodan(key)
 try:
@@ -334,7 +338,7 @@ def slowloris(tgt, port='80'):
     call(['python', 'tools/slowloris/slowloris.py', tgt, '-ua', '-p', port])
 
 # This function uses sslyze.
-# sslyze should be in the $PATH when setup.sh is run
+# sslyze should be put in the $PATH when setup.sh is run
 def ssl(target, outfile=False, filename=''):
     if not outfile:
         print_msg("Analyzing {}".format(target))
@@ -409,7 +413,7 @@ def dump(outfile=False, filename=''):
 ####
 #                   
 #   This handles    
-#   the prompt      
+#   the command prompt      
 #                   
 ####
 
@@ -431,12 +435,6 @@ def main():
             if not user_in == '':
                 history += str(ite) + "  " + user_in + "\n"
                 ite += 1
-
-            # BUG: input validation needs to be fixed. right now
-            # if "search" and "facets" are in the same input
-            # line, it doesnt know what to do. It's assuming
-            # the standard input, but bugs WILL occur if it's
-            # not formatted correctly
 
             if cmds[0] in user_in and not "_host" in user_in:  # search
                 inarr = user_in.split(' ')
@@ -526,7 +524,7 @@ Misc commands:
             elif user_in == cmds[7]:
                 ban = banner()
                 print ban
-            elif cmds[8] in user_in and not "cfresolve" in user_in:  # When I added cfresolve, it caused some confusion with this commmand
+            elif cmds[8] in user_in and not "cfresolve" in user_in:  # When I added `cfresolve`, it caused some confusion with this commmand
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print "\'resolve\' usage: resolve <domain>"
@@ -534,13 +532,13 @@ Misc commands:
                     print_good("{} is {}".format(inarr[1], socket.gethostbyname(inarr[1])))
                 except Exception:
                     print_err("Could not resolve {}".format(inarr[1]))
-            elif cmds[9] in user_in:
+            elif cmds[9] in user_in:  # portscan
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'portscan\' usage: portscan <ip> <min port> <max port>")
                 else:
                     portscan(inarr[2], inarr[3], inarr[4])
-            elif cmds[10] in user_in:
+            elif cmds[10] in user_in:  # slowloris
                 inarr = user_in.split(' ')
                 if len(inarr) < 2 and not len(inarr) > 4:
                     print_msg("\'slowloris\' usage: slowloris <target IP> [port (default: 80)]")
@@ -554,7 +552,7 @@ Misc commands:
                         slowloris(inarr[1])
                     except KeyboardInterrupt:
                         continue
-            elif cmds[11] in user_in:
+            elif cmds[11] in user_in:  # ssl
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'ssl\' usage: ssl <target> [outfilename]")
@@ -564,7 +562,7 @@ Misc commands:
                     ssl(inarr[1], True, inarr[2])
             elif user_in == "key":  # No function for this, but it's still an cool little command
                 print_msg("Your Shodan API key is: {}".format(key))
-            elif cmds[12] in user_in:
+            elif cmds[12] in user_in:  # mailsniff
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'mailsniff\' usage: mailsniff <interface> <time>")
@@ -573,7 +571,7 @@ Misc commands:
                     print_msg("\'mailsniff\' usage: mailsniff <interface> <time>")
                 else:
                     mailsniff(inarr[1], inarr[2])
-            elif cmds[13] in user_in:
+            elif cmds[13] in user_in:  # heartbleed
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'heartbleed\' usage: heartbleed <target ip> [memdumpfile]")
@@ -581,13 +579,13 @@ Misc commands:
                     hb_test(inarr[1])
                 else:
                     hb_test(inarr[1], True, inarr[2])
-            elif user_in == cmds[14]:
+            elif user_in == cmds[14]:  # 3d
                 url = "https://simple.shodan.io/"
                 call(['open', url])  # Only works if you have a GUI desktop (or $TERM is set idk)
             elif cmds[15] in user_in:  # I was too lazy to fullt remove this, to fake error messages it is then :)
                 inarr = user_in.split(' ')
                 print_err("Unknown statement: robots")
-            elif cmds[16] in user_in:
+            elif cmds[16] in user_in:  # honeyscore
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'honeyscore\' usage: honeyscore <ip>")
@@ -599,7 +597,7 @@ Misc commands:
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'internet\' usage: internet <port> [outfilename]")
-                elif len(inarr) == 2:
+                elif len(inarr) == 2:  # internet
                     print_msg("Outputting to STDOUT.")
                     print_msg("[" + bcolors.WARNING + "WARNING" + bcolors.ENDC + "]" + "This will produce a lot of data, it is recommended to output to a file.") # fo real
                     sleep(3)  # Wait for the reader to read the warning
@@ -609,13 +607,13 @@ Misc commands:
                     call(['zmap', '-p', port, '-o', inarr[2]])
             elif user_in == cmds[19]:
                 call(['./tools/c4.sh'])
-            elif cmds[20] in user_in:
+            elif cmds[20] in user_in:  # blacknurse
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'blacknurse\' usage: blacknurse <ip>")
                 else:
                     call(['./tools/blacknurse/blacknurse', inarr[1]])
-            elif cmds[21] in user_in:
+            elif cmds[21] in user_in:  # cfresolve
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'cfresolve\' usage: cfresolve <domain>")
@@ -625,7 +623,7 @@ Misc commands:
                     pass
             elif user_in == "history":
                 print history
-            elif cmds[23] in user_in:
+            elif cmds[23] in user_in:  # subbrute
                 inarr = user_in.split(' ')
                 if len(inarr) < 2:
                     print_msg("\'subbrute\' usage: subbrute <domain> [outfilename]")
