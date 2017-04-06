@@ -31,7 +31,7 @@ import shodan
 import threading
 from time import sleep
 from random import randint
-from subprocess import call
+from subprocess import call  # For calling external programs
 
 # Checks for tools directory
 if not os.path.isdir(os.getcwd() + '/tools'):
@@ -410,13 +410,13 @@ def dump(outfile=False, filename=''):
     except KeyboardInterrupt:
         return
 
+     
 ####
 #                   
 #   This handles    
 #   the command prompt      
 #                   
 ####
-
 def main():
     ban = banner()
     print ban
