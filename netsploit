@@ -404,9 +404,9 @@ def subbrute(host, outfile=False, filename=''):
 def dump(outfile=False, filename=''):
     try:
         if not outfile:
-            call(['tcpdump'])
+            call(['sudo', 'tcpdump'])
         else:
-            call(['tcpdump', '-w', filename])
+            call(['sudo', 'tcpdump', '-w', filename])
     except KeyboardInterrupt:
         return
 
@@ -599,7 +599,7 @@ Misc commands:
                     print_msg("\'internet\' usage: internet <port> [outfilename]")
                 elif len(inarr) == 2:  # internet
                     print_msg("Outputting to STDOUT.")
-                    print_msg("[" + bcolors.WARNING + "WARNING" + bcolors.ENDC + "]" + "This will produce a lot of data, it is recommended to output to a file.") # fo real
+                    print("[" + bcolors.WARNING + "WARNING" + bcolors.ENDC + "] " + "This will produce a lot of data, it is recommended to output to a file.") # fo real
                     sleep(3)  # Wait for the reader to read the warning
                     call(['zmap', '-p', inarr[1]])  # again, a function isn't really needed
                 elif len(inarr) == 3:
@@ -635,7 +635,7 @@ Misc commands:
                 inarr = user_in.split(' ')
                 if len(inarr) == 1:
                     print_msg("Outputting to STDOUT")
-                    print_msg("[" + bcolors.WARN + "WARNING" + bcolors.ENDC + "]" + "This will produce a lot of data. Outputting to a file is recommended")
+                    print("[" + bcolors.WARN + "WARNING" + bcolors.ENDC + "] " + "This will produce a lot of data. Outputting to a file is recommended")
                     sleep(3)
                     dump()
                 else:
