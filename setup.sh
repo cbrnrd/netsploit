@@ -6,6 +6,7 @@ echo -n "Netsploit depends on external tools."
 echo -n "Is it okay to install them?(y/n) "
 read ans
 if [ $ans == "n" ]; then
+  echo "Netsploit will not work without these tools. Exiting..."
   exit
 else
   break
@@ -27,11 +28,11 @@ cd ..
 
 # I suppose this is a form of file IO
 echo "#!/bin/bash"                                      >> c4.sh
-echo "os=\`uname\`"                                         >> c4.sh
-echo "if [ \$os == \"Darwin\" ]; then"                     >> c4.sh
-echo "  open \$(curl -Ls git.io/c4 | gshuf | head -n1)"  >> c4.sh
+echo "os=\`uname\`"                                     >> c4.sh
+echo "if [ \$os == \"Darwin\" ]; then"                  >> c4.sh
+echo "  open \$(curl -Ls git.io/c4 | gshuf | head -n1)" >> c4.sh
 echo "else"                                             >> c4.sh
-echo "  open \$(curl -Ls git.io/c4 | shuf | head -n1)"   >> c4.sh
+echo "  open \$(curl -Ls git.io/c4 | shuf | head -n1)"  >> c4.sh
 echo "fi"                                               >> c4.sh
 chmod +x c4.sh
 
