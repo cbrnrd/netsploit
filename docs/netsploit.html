@@ -1,0 +1,124 @@
+
+<!DOCTYPE [96mStarting netsploit...[0m
+wrote netsploit.html
+
+<html><head><title>Python: module netsploit</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>netsploit</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/Users/Carter/netsploit/netsploitc">/Users/Carter/netsploit/netsploitc</a></font></td></tr></table>
+    <p><tt>netsploit&nbsp;-&nbsp;a&nbsp;security&nbsp;research&nbsp;tool&nbsp;with&nbsp;shodan&nbsp;implementation<br>
+Copyright&nbsp;(C)&nbsp;2017&nbsp;Carter&nbsp;Brainerd<br>
+&nbsp;<br>
+This&nbsp;program&nbsp;is&nbsp;free&nbsp;software:&nbsp;you&nbsp;can&nbsp;redistribute&nbsp;it&nbsp;and/or&nbsp;modify<br>
+it&nbsp;under&nbsp;the&nbsp;terms&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;as&nbsp;published&nbsp;by<br>
+the&nbsp;Free&nbsp;Software&nbsp;Foundation,&nbsp;either&nbsp;version&nbsp;3&nbsp;of&nbsp;the&nbsp;License,&nbsp;or<br>
+(at&nbsp;your&nbsp;option)&nbsp;any&nbsp;later&nbsp;version.<br>
+&nbsp;<br>
+This&nbsp;program&nbsp;is&nbsp;distributed&nbsp;in&nbsp;the&nbsp;hope&nbsp;that&nbsp;it&nbsp;will&nbsp;be&nbsp;useful,<br>
+but&nbsp;WITHOUT&nbsp;ANY&nbsp;WARRANTY;&nbsp;without&nbsp;even&nbsp;the&nbsp;implied&nbsp;warranty&nbsp;of<br>
+MERCHANTABILITY&nbsp;or&nbsp;FITNESS&nbsp;FOR&nbsp;A&nbsp;PARTICULAR&nbsp;PURPOSE.&nbsp;&nbsp;See&nbsp;the<br>
+GNU&nbsp;General&nbsp;Public&nbsp;License&nbsp;for&nbsp;more&nbsp;details.<br>
+&nbsp;<br>
+You&nbsp;should&nbsp;have&nbsp;received&nbsp;a&nbsp;copy&nbsp;of&nbsp;the&nbsp;GNU&nbsp;General&nbsp;Public&nbsp;License<br>
+along&nbsp;with&nbsp;this&nbsp;program.&nbsp;&nbsp;If&nbsp;not,&nbsp;see&nbsp;&lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="os.html">os</a><br>
+<a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="shodan.html">shodan</a><br>
+<a href="socket.html">socket</a><br>
+</td><td width="25%" valign=top><a href="sys.html">sys</a><br>
+<a href="threading.html">threading</a><br>
+</td><td width="25%" valign=top><a href="urllib.html">urllib</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="netsploit.html#bcolors">bcolors</a>
+</font></dt></dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="bcolors">class <strong>bcolors</strong></a></font></td></tr>
+    
+<tr><td bgcolor="#ffc8d8"><tt>&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%">Data and other attributes defined here:<br>
+<dl><dt><strong>BOLD</strong> = '<font color="#c040c0">\x1b</font>[1m'</dl>
+
+<dl><dt><strong>ENDC</strong> = '<font color="#c040c0">\x1b</font>[0m'</dl>
+
+<dl><dt><strong>FAIL</strong> = '<font color="#c040c0">\x1b</font>[31m'</dl>
+
+<dl><dt><strong>HEADER</strong> = '<font color="#c040c0">\x1b</font>[95m'</dl>
+
+<dl><dt><strong>OKBLUE</strong> = '<font color="#c040c0">\x1b</font>[34m'</dl>
+
+<dl><dt><strong>OKGREEN</strong> = '<font color="#c040c0">\x1b</font>[32m'</dl>
+
+<dl><dt><strong>TITLE</strong> = '<font color="#c040c0">\x1b</font>[96m'</dl>
+
+<dl><dt><strong>UL</strong> = '<font color="#c040c0">\x1b</font>[4m'</dl>
+
+<dl><dt><strong>WARNING</strong> = '<font color="#c040c0">\x1b</font>[93m'</dl>
+
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-banner"><strong>banner</strong></a>()</dt><dd><tt>Print&nbsp;a&nbsp;random&nbsp;banner</tt></dd></dl>
+ <dl><dt><a name="-dump"><strong>dump</strong></a>(outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Use&nbsp;tcpdump&nbsp;to&nbsp;sniff&nbsp;packets&nbsp;on&nbsp;the&nbsp;LAN</tt></dd></dl>
+ <dl><dt><a name="-facet_search"><strong>facet_search</strong></a>(query)</dt><dd><tt>Do&nbsp;a&nbsp;facet&nbsp;search&nbsp;on&nbsp;Shodan</tt></dd></dl>
+ <dl><dt><a name="-hb_test"><strong>hb_test</strong></a>(target, outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Exploit&nbsp;heartbleed&nbsp;and&nbsp;print&nbsp;the&nbsp;memory&nbsp;response</tt></dd></dl>
+ <dl><dt><a name="-honey"><strong>honey</strong></a>(ip)</dt><dd><tt>Uses&nbsp;the&nbsp;shodan&nbsp;api&nbsp;to&nbsp;check&nbsp;if&nbsp;something&nbsp;is&nbsp;a&nbsp;honeypot<br>
+Honeyscore&nbsp;can&nbsp;range&nbsp;from&nbsp;0.0-1.0</tt></dd></dl>
+ <dl><dt><a name="-mailsniff"><strong>mailsniff</strong></a>(interface, time)</dt><dd><tt>Use&nbsp;[mail0wner](https://github.com/thecarterb/mail0wner)&nbsp;to&nbsp;sniff&nbsp;the&nbsp;LAN&nbsp;for&nbsp;email&nbsp;credentials</tt></dd></dl>
+ <dl><dt><a name="-main"><strong>main</strong></a>()</dt></dl>
+ <dl><dt><a name="-myip"><strong>myip</strong></a>()</dt><dd><tt>Gets&nbsp;the&nbsp;current&nbsp;WAN&nbsp;Ip&nbsp;address</tt></dd></dl>
+ <dl><dt><a name="-portscan"><strong>portscan</strong></a>(host, mini, maxi)</dt><dd><tt>#&nbsp;NOTE:&nbsp;I'm&nbsp;pretty&nbsp;sure&nbsp;that&nbsp;this&nbsp;doesn't&nbsp;work</tt></dd></dl>
+ <dl><dt><a name="-print_err"><strong>print_err</strong></a>(msg)</dt><dd><tt>Print&nbsp;an&nbsp;error&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-print_good"><strong>print_good</strong></a>(msg)</dt><dd><tt>Print&nbsp;a&nbsp;success&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-print_msg"><strong>print_msg</strong></a>(msg)</dt><dd><tt>Print&nbsp;an&nbsp;informational&nbsp;message</tt></dd></dl>
+ <dl><dt><a name="-protocols"><strong>protocols</strong></a>()</dt><dd><tt>Shows&nbsp;account&nbsp;specifics&nbsp;about&nbsp;what&nbsp;you&nbsp;can&nbsp;filter&nbsp;for</tt></dd></dl>
+ <dl><dt><a name="-search"><strong>search</strong></a>(content, outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Do&nbsp;a&nbsp;basic&nbsp;shodan&nbsp;search</tt></dd></dl>
+ <dl><dt><a name="-search_host"><strong>search_host</strong></a>(hostname, outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Search&nbsp;a&nbsp;host&nbsp;(ip)&nbsp;on&nbsp;Shodan.</tt></dd></dl>
+ <dl><dt><a name="-sleep"><strong>sleep</strong></a>(...)</dt><dd><tt><a href="#-sleep">sleep</a>(seconds)<br>
+&nbsp;<br>
+Delay&nbsp;execution&nbsp;for&nbsp;a&nbsp;given&nbsp;number&nbsp;of&nbsp;seconds.&nbsp;&nbsp;The&nbsp;argument&nbsp;may&nbsp;be<br>
+a&nbsp;floating&nbsp;point&nbsp;number&nbsp;for&nbsp;subsecond&nbsp;precision.</tt></dd></dl>
+ <dl><dt><a name="-slowloris"><strong>slowloris</strong></a>(tgt, port<font color="#909090">='80'</font>)</dt><dd><tt>Perform&nbsp;a&nbsp;slowloris&nbsp;attack&nbsp;on&nbsp;a&nbsp;given&nbsp;IP</tt></dd></dl>
+ <dl><dt><a name="-ssl"><strong>ssl</strong></a>(target, outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Use&nbsp;[sslyze](https://github.com/nabla-c0d3/sslyze)&nbsp;to&nbsp;analyze<br>
+the&nbsp;ssl&nbsp;configuration&nbsp;of&nbsp;a&nbsp;web&nbsp;server</tt></dd></dl>
+ <dl><dt><a name="-subbrute"><strong>subbrute</strong></a>(host, outfile<font color="#909090">=False</font>, filename<font color="#909090">=''</font>)</dt><dd><tt>Bruteforces&nbsp;subdomains&nbsp;of&nbsp;a&nbsp;given&nbsp;domain&nbsp;with&nbsp;Sublist3r</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>api</strong> = &lt;shodan.client.Shodan instance&gt;<br>
+<strong>cmds</strong> = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve', 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols', 'internet', 'cam', ...]<br>
+<strong>f</strong> = &lt;closed file '.api_key', mode 'r'&gt;<br>
+<strong>firstline</strong> = 'pgfA1fHbRjYoR9cUWK254glKv9Xwy6jo<font color="#c040c0">\n</font>'<br>
+<strong>key</strong> = 'pgfA1fHbRjYoR9cUWK254glKv9Xwy6jo'<br>
+<strong>test</strong> = {u'https': False, u'plan': u'oss', u'query_credits': 0, u'scan_credits': 0, u'telnet': False, u'unlocked': False, u'unlocked_left': 0}</td></tr></table>
+</body></html>
