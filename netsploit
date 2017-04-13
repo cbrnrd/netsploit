@@ -678,7 +678,7 @@ Misc commands:
                     print_msg("Outputting to STDOUT.")
                     print("[" + bcolors.WARNING + "WARNING" + bcolors.ENDC + "] " + "This will produce a lot of data, it is recommended to output to a file.") # fo real
                     sleep(3)  # Wait for the reader to read the warning
-                    call(['zmap', '-p', inarr[1]])  # again, a function isn't really needed
+                    call([NETSPLOIT_BASE + '/tools/zmap/src/zmap', '-p', inarr[1]])  # again, a function isn't really needed
                 elif len(inarr) == 3:
                     print_msg("Outputting to {}".format(inarr[2]))
                     call(['zmap', '-p', port, '-o', inarr[2]])
