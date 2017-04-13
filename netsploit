@@ -28,24 +28,40 @@ if (sys.version_info > (3, 0)):
 import urllib
 import socket
 import shodan
+import platform
 import threading
 from time import sleep
 from random import randint
 from subprocess import call  # For calling external programs
+from optparse import OptionParser
+
+NETSPLOIT_BASE = os.path.dirname(__file__)
+
+parser = OptionParser()
+parser.add_option("--init", action="store_false", dest="key_init", help="Re-enter your Shodan API key")
+parser.add_option("-v", "--verbose", action="store_false", dest="verbose", help="Use verbose output")
+(options, args) = parser.parse_args()
+
+if options.key_init:
+    with open(NETSPLOIT_BASE + "/util/keyget.py", 'r') as keygetfile:
+        exec(keygetfile.read())
+        keygetfile.close()
 
 # Checks for tools directory
-if not os.path.isdir(os.getcwd() + '/tools'):
+if not os.path.isdir(NETSPLOIT_BASE + '/tools'):
     call(['bash', 'setup.sh'])
 
 # Tries to read the api key from a hidden file
 # generated from the setup script
 try:
-    with open('.api_key', 'r') as f:
+    with open(NETSPLOIT_BASE + '/.api_key', 'r') as f:
         firstline = f.readline()
     f.close()
 except:
-    print "Couldn't locate api key, running setup.sh"
-    call(['bash', 'setup.sh'])
+    print "Couldn't locate api key, running ketget.py"
+    with open(NETSPLOIT_BASE + "/util/keyget.py", 'r') as keygetfile:
+        exec(keygetfile.read())
+        keygetfile.close()
 
 key = firstline.strip()
 # Since the colors are not defined as variables yet
@@ -65,6 +81,7 @@ try:
     test = api.info()
 except:
     print "\033[31mInvalid API key\033[0m"
+    print "Run `keyget.py' in the `util/' directory"
     sys.exit(0)
 call(['clear'])
 class bcolors:
@@ -82,6 +99,12 @@ class bcolors:
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
 'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
+
+def clear():
+    if "wind" in platform.platform():
+        call(["cls"])
+    else:
+        call(["clear"])
 
 # Some basic UI print functions, make it look a bit nicer
 def print_msg(msg):
@@ -252,8 +275,7 @@ def search_host(hostname, outfile=False, filename=''):
     """
         Search a host (ip) on Shodan.
     """
-    domains = [".com", ".org", ".net", ".io"] #NOTE: not tested yet, mainly added for syntactic sugar
-    if domains in hostname:
+    if ".com" in hostname or ".net" in hostname or ".org" in hostname or ".io" in hostname:
         hstip = socket.gethostbyname(hostname)
         print_msg("Searching shodan for {}({})...".format(hstip, hostname))
         host = api.host(hstip)
@@ -349,6 +371,7 @@ def myip():
 
 # NOTE: I'm pretty sure that this doesn't work
 def portscan(host, mini, maxi):
+    print_msg("Scanning {}".format(host))
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     open_ports = 0
     for port in range(mini, maxi):
@@ -575,6 +598,7 @@ Misc commands:
                 inarr = user_in.split(' ')
                 call(inarr[1:])  # This doesn't really need its own function, as it's only used once
             elif user_in == cmds[7]:
+                clear()
                 ban = banner()
                 print ban
             elif cmds[8] in user_in and not "cfresolve" in user_in:  # When I added `cfresolve`, it caused some confusion with this commmand
@@ -587,10 +611,10 @@ Misc commands:
                     print_err("Could not resolve {}".format(inarr[1]))
             elif cmds[9] in user_in:  # portscan
                 inarr = user_in.split(' ')
-                if len(inarr) < 2:
+                if len(inarr) < 3:
                     print_msg("\'portscan\' usage: portscan <ip> <min port> <max port>")
                 else:
-                    portscan(inarr[2], inarr[3], inarr[4])
+                    portscan(inarr[1], int(inarr[2]), int(inarr[3]))
             elif cmds[10] in user_in:  # slowloris
                 inarr = user_in.split(' ')
                 if len(inarr) < 2 and not len(inarr) > 4:
@@ -698,7 +722,10 @@ Misc commands:
             else:
                 print_err("Unknown statement: {}".format(user_in))
         except Exception as e:
-            print_err(e)
+            if options.verbose:
+                print e
+            else:
+                print_err(e)
             pass
         except KeyboardInterrupt:
             print "\n"

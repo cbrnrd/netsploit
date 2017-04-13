@@ -56,8 +56,16 @@ wget http://pastebin.com/raw/kGQ6qquB
 mv kGQ6qquB cf-resolve.py
 
 if [ $os == "Darwin" ]; then
+  # Requirements for zmap
+  brew install pkg-config cmake gmp gengetopt json-c byacc libdnet libunistring
   echo -e "Installing zmap"
-  brew install zmap
+  cd tools
+  git clone https://github.com/zmap/zmap
+  cd zmap
+  cmake .
+  make -j4
+  make install
+  cd ..
   echo -e "Installing coreutils"
   brew install coreutils
   echo -n "Would you like to install tcpdump? (recommended) (y/n) "
@@ -67,6 +75,8 @@ if [ $os == "Darwin" ]; then
     brew install tcpdump
   fi
 else
+  echo "Installing zmap dependencies"
+  apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev
   echo -e "Installing zmap"
   apt-get install -y zmap
   echo -n "Would you like to install tcpdump? (recommended) (y/n) "
