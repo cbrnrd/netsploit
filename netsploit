@@ -29,6 +29,7 @@ import urllib
 import socket
 import shodan
 import platform
+import readline
 import threading
 from time import sleep
 from random import randint
@@ -97,8 +98,22 @@ class bcolors:
 
 # predefine commands
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
-'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', 'robots', 'honeyscore', 'protocols',
+'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', '?', 'honeyscore', 'protocols',
 'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
+
+# Tab completion logic method
+def completer(text, state):
+    options = [i for i in cmds if i.startswith(text)]
+    if state < len(options):
+        return options[state]
+    else:
+        return None
+
+
+# Set up tab completion
+readline.parse_and_bind("tab: complete")
+readline.set_completer(completer)
+
 
 def clear():
     if "wind" in platform.platform():
@@ -659,7 +674,7 @@ Misc commands:
             elif user_in == cmds[14]:  # 3d
                 url = "https://simple.shodan.io/"
                 call(['open', url])  # Only works if you have a GUI desktop (or $TERM is set idk)
-            elif cmds[15] in user_in:  # I was too lazy to fullt remove this, to fake error messages it is then :)
+            elif 'robots' in user_in:  # I was too lazy to fullt remove this, to fake error messages it is then :)
                 inarr = user_in.split(' ')
                 print_err("Unknown statement: robots")
             elif cmds[16] in user_in:  # honeyscore
