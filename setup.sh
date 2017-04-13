@@ -9,7 +9,7 @@ if [ $ans == "n" ]; then
   echo "Netsploit will not work without these tools. Exiting..."
   exit
 else
-  break
+  
 fi
 os=`uname`
 echo -e "Detected $os"
@@ -64,7 +64,8 @@ if [ $os == "Darwin" ]; then
   cd zmap
   cmake .
   make -j4
-  make install
+  echo "Need root password for zmap install"
+  sudo make install
   cd ..
   echo -e "Installing coreutils"
   brew install coreutils
