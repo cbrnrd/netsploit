@@ -8,8 +8,6 @@ read ans
 if [ $ans == "n" ]; then
   echo "Netsploit will not work without these tools. Exiting..."
   exit
-else
-  
 fi
 os=`uname`
 echo -e "Detected $os"
