@@ -1,3 +1,4 @@
+[![Code Climate](https://codeclimate.com/github/thecarterb/netsploit/badges/gpa.svg)](https://codeclimate.com/github/thecarterb/netsploit)
 # Netsploit
 A security research tool with shodan implementation
 
