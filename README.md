@@ -47,10 +47,15 @@ sslyze
 Other program dependencies are:
 
 [c4](https://github.com/turbo/c4)
+
 [mail0wner](https://github.com/thecarterb/mail0wner)
+
 [blacknurse](https://github.com/jedisct1/blacknurse)
+
 [Sublist3r](https://github.com/aboul3la/Sublist3r)
+
 [Slowloris](https://github.com/gkbrk/slowloris)
+
 [Zmap](https://github.com/zmap/zmap)
 
 Happy Hacking!
