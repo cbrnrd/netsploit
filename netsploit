@@ -30,7 +30,6 @@ import socket
 import shodan
 import platform
 import readline
-import threading
 from time import sleep
 from random import randint
 from subprocess import call  # For calling external programs
@@ -47,6 +46,7 @@ if options.key_init:
     with open(NETSPLOIT_BASE + "/util/keyget.py", 'r') as keygetfile:
         exec(keygetfile.read())
         keygetfile.close()
+        sys.exit(0)
 
 # Checks for tools directory
 if not os.path.isdir(NETSPLOIT_BASE + '/tools'):
@@ -96,7 +96,7 @@ class bcolors:
     TITLE    =  '\033[96m'
     UL       =  '\033[4m'
 
-# predefine commands
+# predefine commands for tab completion
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', '?', 'honeyscore', 'protocols',
 'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
