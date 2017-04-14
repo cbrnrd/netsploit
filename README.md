@@ -31,7 +31,7 @@ libunistring-dev
 tcpdump
 ```
 
-#### Debian packageinstall:
+#### Debian package install:
 ` sudo apt-get install build-essential cmake libgmp3-dev gengetopt libpcap-dev flex byacc libjson-c-dev pkg-config libunistring-dev tcpdump`
 
 #### OS X package install (with `brew`):
