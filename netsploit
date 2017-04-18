@@ -48,6 +48,8 @@ if options.key_init:
         keygetfile.close()
         sys.exit(0)
 
+if options.verbose:
+  print "Checking for tools directory"
 # Checks for tools directory
 if not os.path.isdir(NETSPLOIT_BASE + '/tools'):
     call(['bash', 'setup.sh'])
@@ -142,6 +144,16 @@ def print_good(msg):
         Print a success message
     """
     print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
+    
+
+def vprint_msg(msg=''):
+  """
+      Only print message if verbose is on
+  """
+  if options.verbose:
+    print bcolors.OKBLUE + bcolors.BOLD + "[*] " + bcolors.ENDC + msg
+  else:
+    return
 
 
 def banner():
@@ -376,7 +388,7 @@ def facet_search(query):
 # the regex here is insane I wanted to kms doing it
 def myip():
     """
-        Gets the current WAN Ip address
+        Gets the current WAN IP address
     """
     f = urllib.urlopen("http://www.canyouseeme.org/")
     html_doc = f.read()
@@ -390,6 +402,7 @@ def portscan(host, mini, maxi):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     open_ports = 0
     for port in range(mini, maxi):
+        vprint_msg("Scanning port {}".format(port))
         result = s.connect_ex((host, port))
         if result == 0:
             print_good("Open port: {}".format(port))
@@ -480,10 +493,10 @@ def subbrute(host, outfile=False, filename=''):
         Bruteforces subdomains of a given domain with Sublist3r
     """
     if not outfile:
-        print_msg("Enumerating {} subdomains".format(host))
+        print_msg("Enumerating {}'s subdomains".format(host))
         call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v'])
     else:
-        print_msg("Enumerating {} subdomains (Outputting results to text file)".format(host))
+        print_msg("Enumerating {}'s subdomains (Outputting results to text file)".format(host))
         call(['python', 'tools/Sublist3r/sublist3r.py', '-d', host, '-v', '-o', filename])
 
 
