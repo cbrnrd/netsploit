@@ -1,7 +1,7 @@
 require 'socket'
 
 
-port = ARGV.shift
+port = ARGV[1].to_i
 server = TCPServer.new port
 
 puts "Listening on tcp/#{port}"
