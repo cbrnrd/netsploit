@@ -33,18 +33,19 @@ echo "fi"                                               >> c4.sh
 chmod +x c4.sh
 
 # include some of my own tools as well
-git clone https://github.com/thecarterb/mail0wner.git
+git clone https://github.com/thecarterb/mail0wner.git  # for mailsniff
 cd mail0wner
 bash install.sh > /dev/null 2>&1
 cd ..
-git clone https://github.com/thecarterb/hb-test-copy heartbleed
+git clone https://github.com/thecarterb/hb-test-copy heartbleed  # for heartbleed
+git clone https://github.com/CoreSecurity/impacket  # for smbserver
 
 #blacknurse router attack
 git clone https://github.com/jedisct1/blacknurse
 cd blacknurse
 make
 cd ..
-git clone https://github.com/aboul3la/Sublist3r
+git clone https://github.com/aboul3la/Sublist3r  # for subbrute
 cd Sublist3r
 pip install -r requirements.txt > /dev/null 2>&1
 cd ..

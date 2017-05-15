@@ -30,6 +30,7 @@ import socket
 import shodan
 import platform
 import readline
+import traceback
 from time import sleep
 from random import randint
 from subprocess import call  # For calling external programs
@@ -101,7 +102,7 @@ class bcolors:
 # predefine commands for tab completion
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', '?', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream', 'smbserver']
 
 # Tab completion logic method
 def completer(text, state):
@@ -144,7 +145,7 @@ def print_good(msg):
         Print a success message
     """
     print bcolors.OKGREEN + bcolors.BOLD + "[+] " + bcolors.ENDC + msg
-    
+
 
 def vprint_msg(msg=''):
   """
@@ -600,6 +601,8 @@ Networking commands:
   ssl            Do a scan of the targets SSL configuration
   subbrute       Use Sublist3r to enumerate subdomains of a given domain
   tcpstream      Output the tcp stream of the network
+  smbserver      Start a SMB server to get LM/NTLM hashes from connecting clients
+                 (password required)
 
 
 Misc commands:
@@ -618,6 +621,12 @@ Misc commands:
 
             elif user_in == '':
                 pass
+            elif cmds[len(cmds) - 1 ] in user_in:
+                inarr = user_in.split(' ')
+                if len(inarr) != 3:
+                    print "\'smbserver\' usage: smbserver <sharename> <sharepath>"
+                else:
+                    call(['sudo', 'python', 'tools/impacket/examples/smbserver.py', inarr[1], inarr[2]])
             elif user_in == "clear":
                 call(["clear"])
             elif user_in == cmds[5]:
@@ -754,6 +763,7 @@ Misc commands:
                 print e
             else:
                 print_err(e)
+                traceback.print_exc(file=sys.stdout)
             pass
         except KeyboardInterrupt:
             print "\n"
