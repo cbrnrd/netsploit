@@ -44,7 +44,9 @@ shodan
 sslyze
 ```
 
-Other program dependencies are:
+Other program dependencies are (to be placed in the tools directory):
+
+[Impacket](https://github.com/CoreSecurity/impacket)
 
 [c4](https://github.com/turbo/c4)
 
