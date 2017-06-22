@@ -45,7 +45,7 @@ parser.add_option("-v", "--verbose", action="store_false", dest="verbose", help=
 
 if options.key_init:
     with open(NETSPLOIT_BASE + "/util/keyget.py", 'r') as keygetfile:
-        exec(keygetfile.read())
+        exec(keygetfile.read())  # This is super unsafe
         keygetfile.close()
         sys.exit(0)
 
@@ -83,9 +83,8 @@ api = shodan.Shodan(key)
 try:
     # Check if API key is valid
     test = api.info()
-except:
-    print "\033[31mInvalid API key\033[0m"
-    print "Run `keyget.py' in the `util/' directory"
+except Exception as exc:
+    print "\033[31m{}\033[0m".format(exc)
     sys.exit(0)
 call(['clear'])
 class bcolors:
@@ -102,7 +101,7 @@ class bcolors:
 # predefine commands for tab completion
 cmds = ['search', 'exit', 'search_host', 'facets', 'help', 'myip', 'exec', 'banner', 'resolve',
 'portscan', 'slowloris', 'ssl', 'mailsniff', 'heartbleed', '3d', '?', 'honeyscore', 'protocols',
-'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream', 'smbserver']
+'internet', 'cam', 'blacknurse', 'cfresolve', 'history', 'subbrute', 'tcpstream', 'smbserver', 'clear']
 
 # Tab completion logic method
 def completer(text, state):
@@ -621,7 +620,7 @@ Misc commands:
 
             elif user_in == '':
                 pass
-            elif cmds[len(cmds) - 1 ] in user_in:
+            elif 'smbserver' in user_in:
                 inarr = user_in.split(' ')
                 if len(inarr) != 3:
                     print "\'smbserver\' usage: smbserver <sharename> <sharepath>"
