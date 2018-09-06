@@ -11,7 +11,7 @@ Netsploit is a python-based security research tool that implements the Shodan AP
 #### Note: A Shodan API key is necessary any way you install Netsploit. Sign up for a free one [here](https://account.shodan.io/register)
 
 Building from source is often the best solution:
-1. `git clone https://github.com/thecarter/netsploit`
+1. `git clone https://github.com/cbrnrd/netsploit`
 2. `cd netsploit`
 3. `./setup.sh`
 4. Now just start netsploit: `./netsploit`
@@ -50,7 +50,7 @@ Other program dependencies are (to be placed in the tools directory):
 
 [c4](https://github.com/turbo/c4)
 
-[mail0wner](https://github.com/thecarterb/mail0wner)
+[mail0wner](https://github.com/cbrnrd/mail0wner)
 
 [blacknurse](https://github.com/jedisct1/blacknurse)
 
