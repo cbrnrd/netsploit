@@ -33,7 +33,7 @@ echo "fi"                                               >> c4.sh
 chmod +x c4.sh
 
 # include some of my own tools as well
-git clone https://github.com/thecarterb/mail0wner.git  # for mailsniff
+git clone https://github.com/cbrnrd/mail0wner.git  # for mailsniff
 cd mail0wner
 bash install.sh > /dev/null 2>&1
 cd ..
